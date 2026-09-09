@@ -28,21 +28,19 @@ const SITE_CONFIG = {
   },
 
   contact: {
-    email: "contact@hassanplatform.com",
-    telegram: "@hassan_trading_dev",
-    telegramUrl: "https://t.me/hassan_trading_dev",
-    whatsapp: "+1 (555) 019-8234",
-    whatsappUrl: "https://wa.me/15550198234",
+    email: "contact@yourdomain.com",
+    telegram: "@your_telegram_handle",
+    telegramUrl: "https://t.me/",
     githubUrl: "https://github.com/Shifrozy/hassan-platform",
-    linkedinUrl: "https://linkedin.com",
-    discordUrl: "https://discord.com",
+    linkedinUrl: "#",
+    discordUrl: "#",
     responseTime: "< 4 Hours"
   },
 
   meta: {
-    siteUrl: "https://hassanplatform.com",
+    siteUrl: "https://yourdomain.com",
     ogImage: "assets/images/brand/og-preview.png",
-    twitterHandle: "@hassan_algo"
+    twitterHandle: "@your_handle"
   },
 
   technologies: [
