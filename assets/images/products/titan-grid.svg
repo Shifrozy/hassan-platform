@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c1322"/>
+      <stop offset="100%" stop-color="#121d34"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="12" fill="url(#bgGrad2)"/>
+  <rect x="20" y="20" width="360" height="200" rx="8" stroke="#1e2f52" stroke-width="1.5" fill="#070b14"/>
+  
+  <!-- Grid Matrix Levels -->
+  <line x1="40" y1="80" x2="360" y2="80" stroke="#00e5ff" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="320" y="75" fill="#00e5ff" font-family="monospace" font-size="10">TP Level 3</text>
+  
+  <line x1="40" y1="110" x2="360" y2="110" stroke="#00e5ff" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="320" y="105" fill="#00e5ff" font-family="monospace" font-size="10">TP Level 2</text>
+  
+  <line x1="40" y1="140" x2="360" y2="140" stroke="#ffd600" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <text x="320" y="135" fill="#ffd600" font-family="monospace" font-size="10">Equilibrium</text>
+  
+  <line x1="40" y1="170" x2="360" y2="170" stroke="#00e676" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="320" y="165" fill="#00e676" font-family="monospace" font-size="10">Buy Grid 1</text>
+  
+  <line x1="40" y1="195" x2="360" y2="195" stroke="#00e676" stroke-opacity="0.3" stroke-width="1.5"/>
+  <text x="320" y="190" fill="#00e676" font-family="monospace" font-size="10">Buy Grid 2</text>
+  
+  <!-- Oscillating Price Vector -->
+  <polyline points="50,140 90,165 130,120 170,185 210,140 250,95 290,125 330,85" stroke="#00e676" stroke-width="2.5" fill="none"/>
+  
+  <!-- Title Badge -->
+  <rect x="40" y="35" width="140" height="22" rx="4" fill="#7952ff" fill-opacity="0.15" stroke="#7952ff" stroke-width="1"/>
+  <text x="50" y="50" fill="#a78bfa" font-family="monospace" font-size="11" font-weight="bold">QUANTUM GRID V2.8</text>
+</svg>

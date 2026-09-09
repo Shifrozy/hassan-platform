@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <defs>
+    <linearGradient id="bgGrad1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c1322"/>
+      <stop offset="100%" stop-color="#121d34"/>
+    </linearGradient>
+    <linearGradient id="cyanLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#00e676"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" rx="12" fill="url(#bgGrad1)"/>
+  <rect x="20" y="20" width="360" height="200" rx="8" stroke="#1e2f52" stroke-width="1.5" fill="#070b14"/>
+  
+  <!-- Grid Lines -->
+  <line x1="20" y1="70" x2="380" y2="70" stroke="#152038" stroke-dasharray="4 4"/>
+  <line x1="20" y1="120" x2="380" y2="120" stroke="#152038" stroke-dasharray="4 4"/>
+  <line x1="20" y1="170" x2="380" y2="170" stroke="#152038" stroke-dasharray="4 4"/>
+  
+  <!-- Candlesticks -->
+  <line x1="60" y1="90" x2="60" y2="160" stroke="#ff3366" stroke-width="1.5"/>
+  <rect x="55" y="110" width="10" height="35" rx="1" fill="#ff3366"/>
+  
+  <line x1="100" y1="80" x2="100" y2="150" stroke="#00e676" stroke-width="1.5"/>
+  <rect x="95" y="95" width="10" height="40" rx="1" fill="#00e676"/>
+  
+  <line x1="140" y1="75" x2="140" y2="140" stroke="#00e676" stroke-width="1.5"/>
+  <rect x="135" y="85" width="10" height="35" rx="1" fill="#00e676"/>
+  
+  <line x1="180" y1="100" x2="180" y2="170" stroke="#ff3366" stroke-width="1.5"/>
+  <rect x="175" y="115" width="10" height="30" rx="1" fill="#ff3366"/>
+  
+  <!-- Dynamic Trend Channel Wave -->
+  <path d="M 40,150 Q 120,80 200,120 T 360,60" fill="none" stroke="url(#cyanLine)" stroke-width="3"/>
+  <circle cx="360" cy="60" r="5" fill="#00e676"/>
+  
+  <!-- Badge Label -->
+  <rect x="40" y="35" width="110" height="22" rx="4" fill="#00e5ff" fill-opacity="0.1" stroke="#00e5ff" stroke-width="1"/>
+  <text x="50" y="50" fill="#00e5ff" font-family="monospace" font-size="11" font-weight="bold">XAUUSD M5 SCALPER</text>
+  
+  <rect x="290" y="35" width="70" height="22" rx="4" fill="#00e676" fill-opacity="0.1" stroke="#00e676" stroke-width="1"/>
+  <text x="300" y="50" fill="#00e676" font-family="monospace" font-size="11" font-weight="bold">+28.4%</text>
+</svg>

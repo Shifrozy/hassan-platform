@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Portfolio & Case Studies | M. Hassan Algorithmic Trading Systems</title>
+  <meta name="description" content="Explore institutional case studies, backtest reports, and performance metrics of custom MT4/MT5 EAs, Python trading bots, and Interactive Brokers automations.">
+  <meta name="author" content="M. Hassan">
+
+  <link rel="icon" type="image/svg+xml" href="assets/images/brand/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline></svg>
+        </div>
+        <span class="brand-logo-text">HASSAN<span>.ALGO</span></span>
+        <span class="brand-tag">PRO</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="services.html" class="nav-link">Services</a>
+        <a href="products.html" class="nav-link">Products</a>
+        <a href="portfolio.html" class="nav-link active">Portfolio</a>
+        <a href="reviews.html" class="nav-link">Reviews</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="contact.html" class="btn btn-primary btn-sm"><span>Start a Project</span></a>
+        <button type="button" class="mobile-toggle" aria-label="Toggle Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="drawer-overlay"></div>
+  <div class="mobile-drawer">
+    <div>
+      <div class="drawer-header">
+        <div class="brand-logo"><span class="brand-logo-text">HASSAN<span>.ALGO</span></span></div>
+        <button type="button" class="drawer-close">&times;</button>
+      </div>
+      <nav class="drawer-links">
+        <a href="index.html" class="drawer-link">Home</a>
+        <a href="about.html" class="drawer-link">About Me</a>
+        <a href="services.html" class="drawer-link">Services</a>
+        <a href="products.html" class="drawer-link">Products & Software</a>
+        <a href="portfolio.html" class="drawer-link active">Portfolio Case Studies</a>
+        <a href="reviews.html" class="drawer-link">Client Reviews</a>
+        <a href="contact.html" class="drawer-link">Contact & Inquire</a>
+      </nav>
+    </div>
+    <div>
+      <a href="contact.html" class="btn btn-primary btn-block">Get Custom Quote</a>
+    </div>
+  </div>
+
+  <main>
+    <!-- Portfolio Header -->
+    <section class="section" style="padding-top: calc(var(--space-24) + 1rem); padding-bottom: var(--space-8);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Case Studies</span>
+          <h1 class="section-title">Institutional Projects & Case Studies</h1>
+          <p class="section-subtitle">Real-world algorithmic trading engines, execution middleware, and quantitative systems deployed for international clients.</p>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="filter-nav">
+          <button type="button" class="filter-btn active" data-filter="all">All Projects</button>
+          <button type="button" class="filter-btn" data-filter="MetaTrader">MetaTrader (MQL5/4)</button>
+          <button type="button" class="filter-btn" data-filter="Python">Python Bots</button>
+          <button type="button" class="filter-btn" data-filter="Interactive Brokers">Interactive Brokers</button>
+          <button type="button" class="filter-btn" data-filter="API Integration">API Bridges</button>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="grid grid-2" style="gap: var(--space-8);">
+          
+          <!-- Project 1 -->
+          <div class="project-card" data-category="MetaTrader" data-project-id="gold-institutional-scalper" style="cursor: pointer;">
+            <div class="project-preview">
+              <img src="assets/images/portfolio/project-mt5-ea.svg" alt="Gold Scalper Case Study">
+            </div>
+            <div class="project-info">
+              <span class="project-category">MT5 Expert Advisor • Prop Challenge Pass</span>
+              <h2 class="project-title" style="font-size: var(--text-xl);">Institutional Gold (XAUUSD) High-Frequency EA</h2>
+              <p class="project-desc">Engineered an ultra-low latency MQL5 Expert Advisor utilizing Level 2 Order Book imbalance and ATR dynamic channels on 1-minute Gold charts.</p>
+              
+              <div class="project-metrics">
+                <div class="metric-item">
+                  <span class="metric-label">Profit Factor</span>
+                  <span class="metric-val">2.34</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Max Drawdown</span>
+                  <span class="metric-val" style="color: var(--accent-cyan);">4.8%</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Win Rate</span>
+                  <span class="metric-val">68.2%</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Execution Latency</span>
+                  <span class="metric-val" style="color: var(--accent-cyan);">&lt; 12ms</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle);">
+                <span style="font-size: 11px; color: var(--text-muted);">Client: Private Prop Trader (Switzerland)</span>
+                <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;">View Case Study ▹</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="project-card" data-category="Python" data-project-id="crypto-cross-exchange-arbitrage" style="cursor: pointer;">
+            <div class="project-preview">
+              <img src="assets/images/portfolio/project-crypto-bot.svg" alt="Crypto Arbitrage Case Study">
+            </div>
+            <div class="project-info">
+              <span class="project-category">Python Quantitative Bot • Cloud Cluster</span>
+              <h2 class="project-title" style="font-size: var(--text-xl);">Cross-Exchange Statistical Arbitrage Engine</h2>
+              <p class="project-desc">Developed an asynchronous multi-threaded Python engine capturing basis spread differentials between Binance Futures and Bybit Perpetual contracts.</p>
+              
+              <div class="project-metrics">
+                <div class="metric-item">
+                  <span class="metric-label">Monthly Yield</span>
+                  <span class="metric-val">4.6% Avg</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Sharpe Ratio</span>
+                  <span class="metric-val" style="color: var(--accent-cyan);">3.82</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Avg Spread Captured</span>
+                  <span class="metric-val">8.4 bps</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Uptime</span>
+                  <span class="metric-val" style="color: var(--accent-green);">99.98%</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle);">
+                <span style="font-size: 11px; color: var(--text-muted);">Client: Family Office (Singapore)</span>
+                <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;">View Case Study ▹</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="project-card" data-category="Interactive Brokers" data-project-id="ibkr-options-volatility-harvester" style="cursor: pointer;">
+            <div class="project-preview">
+              <img src="assets/images/portfolio/project-ibkr-system.svg" alt="IBKR Options System Case Study">
+            </div>
+            <div class="project-info">
+              <span class="project-category">IBKR API • Institutional Derivatives</span>
+              <h2 class="project-title" style="font-size: var(--text-xl);">IBKR Automated Delta-Neutral Options Engine</h2>
+              <p class="project-desc">Institutional options execution system connecting to Interactive Brokers TWS API to trade 0DTE SPX Iron Condors with dynamic delta rebalancing.</p>
+              
+              <div class="project-metrics">
+                <div class="metric-item">
+                  <span class="metric-label">Annualized Alpha</span>
+                  <span class="metric-val">+28.4%</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Beta to S&P 500</span>
+                  <span class="metric-val" style="color: var(--accent-cyan);">0.12</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Max Consecutive Wins</span>
+                  <span class="metric-val">24 Trades</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Accounts Managed</span>
+                  <span class="metric-val" style="color: var(--accent-cyan);">18 Terminals</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle);">
+                <span style="font-size: 11px; color: var(--text-muted);">Client: Registered Investment Advisor (USA)</span>
+                <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;">View Case Study ▹</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4 -->
+          <div class="project-card" data-category="API Integration" data-project-id="tradingview-metaapi-copier" style="cursor: pointer;">
+            <div class="project-preview">
+              <img src="assets/images/portfolio/project-arbitrage.svg" alt="TradingView MetaAPI Copier">
+            </div>
+            <div class="project-info">
+              <span class="project-category">Cloud API Bridge • High-Throughput</span>
+              <h2 class="project-title" style="font-size: var(--text-xl);">TradingView Webhook Multi-Broker Router</h2>
+              <p class="project-desc">High-availability cloud middleware translating TradingView alerts into MT4, MT5, and cTrader orders across 500+ client terminals simultaneously.</p>
+              
+              <div class="project-metrics">
+                <div class="metric-item">
+                  <span class="metric-label">Replication Speed</span>
+                  <span class="metric-val">140ms</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Client Accounts</span>
+                  <span class="metric-val" style="color: var(--accent-cyan);">540+ Terminals</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Daily Executions</span>
+                  <span class="metric-val">3,200+</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Execution Success</span>
+                  <span class="metric-val" style="color: var(--accent-green);">99.94%</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle);">
+                <span style="font-size: 11px; color: var(--text-muted);">Client: Signal Community (UK)</span>
+                <span style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;">View Case Study ▹</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Custom Project CTA -->
+    <section class="section" style="background: var(--bg-secondary); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+      <div class="container text-center">
+        <div class="section-header">
+          <span class="section-tag">Let's Collaborate</span>
+          <h2 class="section-title">Want to Build a Similar System?</h2>
+          <p class="section-subtitle">Whether you need an automated MT5 EA, a custom Python arbitrage bot, or a multi-broker execution router, let's discuss your specification.</p>
+        </div>
+        <a href="contact.html" class="btn btn-primary btn-lg">Inquire About Custom Engineering</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="brand-logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline></svg>
+            </div>
+            <span class="brand-logo-text">HASSAN<span>.ALGO</span></span>
+          </div>
+          <p data-config="brand.shortBio">Developing institutional-grade MetaTrader 4/5 EAs, Python algorithmic trading bots, and Interactive Brokers API automations.</p>
+        </div>
+        <div>
+          <h4 class="footer-heading">Platform</h4>
+          <nav class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="about.html" class="footer-link">About Developer</a>
+            <a href="services.html" class="footer-link">Services</a>
+            <a href="products.html" class="footer-link">Software Catalog</a>
+            <a href="portfolio.html" class="footer-link">Portfolio & Stats</a>
+            <a href="reviews.html" class="footer-link">Client Reviews</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="footer-heading">Specialties</h4>
+          <nav class="footer-links">
+            <a href="services.html" class="footer-link">MT5 MQL5 EAs</a>
+            <a href="services.html" class="footer-link">MT4 MQL4 EAs</a>
+            <a href="services.html" class="footer-link">Python Trading Bots</a>
+            <a href="services.html" class="footer-link">IBKR TWS API</a>
+            <a href="services.html" class="footer-link">Prop Firm Guard EAs</a>
+          </nav>
+        </div>
+        <div>
+          <h4 class="footer-heading">Direct Inquiry</h4>
+          <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--accent-cyan); margin-bottom: 8px;">📧 contact@hassanplatform.com</div>
+          <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--accent-green);">💬 Telegram: @hassan_trading_dev</div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copyright">&copy; <span class="current-year">2026</span> Hassan Platform. All Rights Reserved.</div>
+        <div class="footer-disclaimer"><strong>Risk Disclaimer:</strong> Trading carries significant financial risk. Algorithmic software does not guarantee profits.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/data/portfolio.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/components/portfolio-filter.js"></script>
+</body>
+</html>
