@@ -4,9 +4,19 @@
 
 /* Large Tablets & Small Laptops (<= 1024px) */
 @media (max-width: 1024px) {
-  .hero-grid {
+  .hero-grid,
+  .hero-grid-with-image {
     grid-template-columns: 1fr;
     gap: var(--space-8);
+  }
+
+  .hero-image-wrapper {
+    order: -1;
+  }
+
+  .hero-profile-container {
+    width: 280px;
+    height: 280px;
   }
 
   .hero-terminal {
@@ -56,8 +66,18 @@
   }
 
   .hero-stats-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-3);
+  }
+
+  .hero-profile-container {
+    width: 220px;
+    height: 220px;
+  }
+
+  .hero-profile-badge {
+    font-size: 10px;
+    padding: 4px 12px;
   }
 
   .calc-layout {

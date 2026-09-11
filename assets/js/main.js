@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initToasts();
   highlightActiveNav();
+  loadAdminOverrides();
 });
 
 /**
@@ -174,3 +175,46 @@ window.showToast = function(message, type = 'success', duration = 4500) {
     setTimeout(() => toast.remove(), 300);
   }, duration);
 };
+
+/**
+ * ============================================================================
+ * Admin Data Override Layer
+ * ============================================================================
+ * Checks localStorage for admin-modified data and overrides the global
+ * static data arrays. This allows admin panel changes to reflect on the
+ * main website without any backend.
+ */
+function loadAdminOverrides() {
+  const STORAGE_KEYS = {
+    products: 'hassan_admin_products',
+    services: 'hassan_admin_services',
+    portfolio: 'hassan_admin_portfolio',
+    reviews: 'hassan_admin_reviews'
+  };
+
+  // Override global data if admin has modified it
+  Object.keys(STORAGE_KEYS).forEach(key => {
+    const stored = localStorage.getItem(STORAGE_KEYS[key]);
+    if (stored) {
+      try {
+        const data = JSON.parse(stored);
+        switch (key) {
+          case 'products':
+            if (typeof window.PRODUCTS_DATA !== 'undefined') window.PRODUCTS_DATA = data;
+            break;
+          case 'services':
+            if (typeof window.SERVICES_DATA !== 'undefined') window.SERVICES_DATA = data;
+            break;
+          case 'portfolio':
+            if (typeof window.PORTFOLIO_DATA !== 'undefined') window.PORTFOLIO_DATA = data;
+            break;
+          case 'reviews':
+            if (typeof window.REVIEWS_DATA !== 'undefined') window.REVIEWS_DATA = data;
+            break;
+        }
+      } catch (e) {
+        // Invalid JSON, skip override
+      }
+    }
+  });
+}
