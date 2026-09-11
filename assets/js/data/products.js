@@ -4,7 +4,7 @@
  * ============================================================================
  */
 
-const PRODUCTS_DATA = [
+var PRODUCTS_DATA = window.PRODUCTS_DATA = [
   {
     id: "apex-trend-scalper-pro",
     name: "Apex Trend Scalper Pro",

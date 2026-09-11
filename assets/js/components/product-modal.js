@@ -8,6 +8,28 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductModals();
 });
 
+function getProductById(id) {
+  if (typeof ContentRenderer !== 'undefined' && typeof ContentRenderer.getData === 'function') {
+    const list = ContentRenderer.getData('products');
+    const found = list.find(p => p.id === id);
+    if (found) return found;
+  }
+  const stored = localStorage.getItem('hassan_admin_products');
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        const found = parsed.find(p => p.id === id);
+        if (found) return found;
+      }
+    } catch (e) {}
+  }
+  if (typeof window.PRODUCTS_DATA !== 'undefined') {
+    return window.PRODUCTS_DATA.find(p => p.id === id);
+  }
+  return null;
+}
+
 function initProductModals() {
   // Delegate click on product cards or detail buttons
   document.addEventListener('click', (e) => {
@@ -17,14 +39,12 @@ function initProductModals() {
     const productId = trigger.getAttribute('data-product-id');
     const action = trigger.getAttribute('data-action') || 'view';
 
-    if (typeof PRODUCTS_DATA !== 'undefined') {
-      const product = PRODUCTS_DATA.find(p => p.id === productId);
-      if (product) {
-        if (action === 'buy') {
-          openCheckoutModal(product);
-        } else {
-          openProductDetailModal(product);
-        }
+    const product = getProductById(productId);
+    if (product) {
+      if (action === 'buy') {
+        openCheckoutModal(product);
+      } else {
+        openProductDetailModal(product);
       }
     }
   });
@@ -64,43 +84,61 @@ function openProductDetailModal(product) {
 
   if (!modal || !product) return;
 
-  title.textContent = product.name;
+  const name = product.name || product.title || 'Trading Bot';
+  const desc = product.shortDesc || product.tagline || product.description || '';
+  const priceStr = product.priceFormatted || (product.price ? '$' + product.price : '$299');
+  const platform = product.platform || 'Trading Software';
+  const platformBadge = product.platformBadge || 'badge-mt5';
+  const version = product.version || 'v1.0';
+  const billing = product.billingType || 'One-Time License';
+
+  title.textContent = name;
   
-  const featuresList = product.features.map(f => `
+  let rawFeatures = product.features || [];
+  if (typeof rawFeatures === 'string') rawFeatures = rawFeatures.split('\n').filter(f => f.trim());
+  const featuresList = (Array.isArray(rawFeatures) ? rawFeatures : []).map(f => `
     <li class="product-feature-item" style="font-size: 13px; margin-bottom: 6px;">
       <span class="feature-check">✓</span> ${f}
     </li>
   `).join('');
 
-  const changelogList = product.changelog ? product.changelog.map(c => `
+  let rawChangelog = product.changelog || [];
+  if (typeof rawChangelog === 'string') rawChangelog = rawChangelog.split('\n').filter(c => c.trim());
+  const changelogList = (Array.isArray(rawChangelog) && rawChangelog.length > 0) ? rawChangelog.map(c => `
     <li style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">• ${c}</li>
   `).join('') : '';
 
+  let pairsStr = 'Gold (XAUUSD), Indices, Major FX';
+  if (Array.isArray(product.supportedPairs)) pairsStr = product.supportedPairs.join(', ');
+  else if (typeof product.supportedPairs === 'string') pairsStr = product.supportedPairs;
+
+  const timeframeStr = product.recommendedTimeframe || 'M5 / M15 / H1';
+
   body.innerHTML = `
     <div style="margin-bottom: 1.5rem;">
-      <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-        <span class="badge ${product.platformBadge}">${product.platform}</span>
-        <span class="badge badge-cyan">${product.version}</span>
-        <span class="badge badge-success">${product.billingType}</span>
+      <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+        <span class="badge ${platformBadge}">${platform}</span>
+        <span class="badge badge-cyan">${version}</span>
+        <span class="badge badge-success">${billing}</span>
       </div>
-      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">${product.shortDesc}</p>
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">${desc}</p>
     </div>
 
     <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
       <h4 style="font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; font-family: var(--font-mono);">Key Capabilities</h4>
       <ul style="list-style: none;">
-        ${featuresList}
+        ${featuresList || '<li style="font-size: 13px; color: var(--text-secondary);">Full algorithmic execution logic and risk guards included.</li>'}
       </ul>
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem;">
       <div style="background: var(--bg-primary); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
         <div style="font-size: 11px; color: var(--text-muted);">Recommended Pair(s)</div>
-        <div style="font-family: var(--font-mono); font-size: 13px; color: var(--accent-cyan); font-weight: 600;">${product.supportedPairs.join(', ')}</div>
+        <div style="font-family: var(--font-mono); font-size: 13px; color: var(--accent-cyan); font-weight: 600;">${pairsStr}</div>
       </div>
       <div style="background: var(--bg-primary); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
         <div style="font-size: 11px; color: var(--text-muted);">Recommended Timeframe</div>
-        <div style="font-family: var(--font-mono); font-size: 13px; color: var(--accent-green); font-weight: 600;">${product.recommendedTimeframe}</div>
+        <div style="font-family: var(--font-mono); font-size: 13px; color: var(--accent-green); font-weight: 600;">${timeframeStr}</div>
       </div>
     </div>
 
@@ -114,7 +152,7 @@ function openProductDetailModal(product) {
     ` : ''}
   `;
 
-  buyBtn.textContent = `Get Access (${product.priceFormatted})`;
+  buyBtn.textContent = `Get Access (${priceStr})`;
   buyBtn.onclick = () => {
     openCheckoutModal(product);
   };

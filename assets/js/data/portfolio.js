@@ -4,7 +4,7 @@
  * ============================================================================
  */
 
-const PORTFOLIO_DATA = [
+var PORTFOLIO_DATA = window.PORTFOLIO_DATA = [
   {
     id: "gold-institutional-scalper",
     title: "Institutional Gold (XAUUSD) High-Frequency EA",

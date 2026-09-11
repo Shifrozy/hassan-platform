@@ -37,17 +37,37 @@ function initPortfolioFilter() {
   });
 }
 
+function getProjectById(id) {
+  if (typeof ContentRenderer !== 'undefined' && typeof ContentRenderer.getData === 'function') {
+    const list = ContentRenderer.getData('portfolio');
+    const found = list.find(p => p.id === id);
+    if (found) return found;
+  }
+  const stored = localStorage.getItem('hassan_admin_portfolio');
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        const found = parsed.find(p => p.id === id);
+        if (found) return found;
+      }
+    } catch (e) {}
+  }
+  if (typeof window.PORTFOLIO_DATA !== 'undefined') {
+    return window.PORTFOLIO_DATA.find(p => p.id === id);
+  }
+  return null;
+}
+
 function initCaseStudyModal() {
   document.addEventListener('click', (e) => {
     const trigger = e.target.closest('[data-project-id]');
     if (!trigger) return;
 
     const projectId = trigger.getAttribute('data-project-id');
-    if (typeof PORTFOLIO_DATA !== 'undefined') {
-      const project = PORTFOLIO_DATA.find(p => p.id === projectId);
-      if (project) {
-        openCaseStudyModal(project);
-      }
+    const project = getProjectById(projectId);
+    if (project) {
+      openCaseStudyModal(project);
     }
   });
 

@@ -4,7 +4,7 @@
  * ============================================================================
  */
 
-const SERVICES_DATA = [
+var SERVICES_DATA = window.SERVICES_DATA = [
   {
     id: "mt5-ea-development",
     title: "MT4 / MT5 Expert Advisor (EA) Development",

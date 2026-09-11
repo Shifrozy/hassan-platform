@@ -4,7 +4,7 @@
  * ============================================================================
  */
 
-const REVIEWS_DATA = [
+var REVIEWS_DATA = window.REVIEWS_DATA = [
   {
     id: "rev-1",
     clientName: "David K.",

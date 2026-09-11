@@ -4,14 +4,53 @@
  * ============================================================================
  * Renders website sections dynamically from data arrays (SERVICES_DATA,
  * PRODUCTS_DATA, PORTFOLIO_DATA, REVIEWS_DATA) which are overridden by
- * admin modifications in localStorage.
+ * admin modifications in localStorage in real-time.
  * ============================================================================
  */
 
 const ContentRenderer = (() => {
 
+  const STORAGE_KEYS = {
+    products: 'hassan_admin_products',
+    services: 'hassan_admin_services',
+    portfolio: 'hassan_admin_portfolio',
+    reviews: 'hassan_admin_reviews',
+    config: 'hassan_admin_config'
+  };
+
   /**
-   * Initialize rendering based on current page
+   * Helper to retrieve latest data from localStorage or fallback to defaults
+   */
+  function getData(type) {
+    const stored = localStorage.getItem(STORAGE_KEYS[type]);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        // Fall through
+      }
+    }
+
+    // Fallback to global data objects
+    switch (type) {
+      case 'products':
+        return typeof window.PRODUCTS_DATA !== 'undefined' ? window.PRODUCTS_DATA : [];
+      case 'services':
+        return typeof window.SERVICES_DATA !== 'undefined' ? window.SERVICES_DATA : [];
+      case 'portfolio':
+        return typeof window.PORTFOLIO_DATA !== 'undefined' ? window.PORTFOLIO_DATA : [];
+      case 'reviews':
+        return typeof window.REVIEWS_DATA !== 'undefined' ? window.REVIEWS_DATA : [];
+      default:
+        return [];
+    }
+  }
+
+  /**
+   * Initialize rendering on DOM ready
    */
   function init() {
     renderHomeSections();
@@ -33,9 +72,11 @@ const ContentRenderer = (() => {
 
   function renderHomeServices() {
     const container = document.getElementById('home-services-grid');
-    if (!container || typeof SERVICES_DATA === 'undefined') return;
+    if (!container) return;
 
-    const items = SERVICES_DATA.slice(0, 3);
+    const services = getData('services');
+    const items = services.slice(0, 3);
+
     container.innerHTML = items.map(service => {
       const title = service.title || service.name || 'Custom Service';
       const desc = service.shortDesc || service.detailedDesc || service.description || '';
@@ -64,11 +105,13 @@ const ContentRenderer = (() => {
 
   function renderHomeProducts() {
     const container = document.getElementById('home-products-grid');
-    if (!container || typeof PRODUCTS_DATA === 'undefined') return;
+    if (!container) return;
 
-    const items = PRODUCTS_DATA.slice(0, 3);
+    const products = getData('products');
+    const items = products.slice(0, 3);
+
     container.innerHTML = items.map(product => {
-      const name = product.name || product.title || 'Trading Bot';
+      const name = product.name || product.title || 'Trading Software';
       const desc = product.shortDesc || product.tagline || product.description || '';
       let rawFeatures = product.features || [];
       if (typeof rawFeatures === 'string') rawFeatures = rawFeatures.split('\n').filter(f => f.trim());
@@ -105,9 +148,11 @@ const ContentRenderer = (() => {
 
   function renderHomeReviews() {
     const container = document.getElementById('home-reviews-grid');
-    if (!container || typeof REVIEWS_DATA === 'undefined') return;
+    if (!container) return;
 
-    const items = REVIEWS_DATA.slice(0, 3);
+    const reviews = getData('reviews');
+    const items = reviews.slice(0, 3);
+
     container.innerHTML = items.map(review => {
       const name = review.clientName || review.name || review.author || 'Verified Trader';
       const comment = review.comment || review.quote || review.text || review.description || '';
@@ -138,9 +183,17 @@ const ContentRenderer = (() => {
 
   function renderProductsPage() {
     const container = document.getElementById('products-grid-container');
-    if (!container || typeof PRODUCTS_DATA === 'undefined') return;
+    if (!container) return;
 
-    renderProductsList(PRODUCTS_DATA);
+    const products = getData('products');
+
+    // Update filter all tab count dynamically
+    const allTabBtn = document.querySelector('.filter-nav .filter-btn[data-filter="all"]');
+    if (allTabBtn) {
+      allTabBtn.textContent = `All Software (${products.length})`;
+    }
+
+    renderProductsList(products);
     initProductsFilter();
   }
 
@@ -158,6 +211,10 @@ const ContentRenderer = (() => {
     }
 
     container.innerHTML = products.map(product => {
+      const name = product.name || product.title || 'Trading Bot';
+      const desc = product.shortDesc || product.tagline || product.description || '';
+      const priceStr = product.priceFormatted || (product.price ? '$' + product.price : '$299');
+
       // Determine filter category
       let categoryAttr = 'all';
       const plat = (product.platform || '').toLowerCase();
@@ -165,14 +222,16 @@ const ContentRenderer = (() => {
       else if (plat.includes('mt4')) categoryAttr = 'mt4';
       else if (plat.includes('python') || plat.includes('ibkr')) categoryAttr = 'python';
 
-      const featuresList = (product.features || []).slice(0, 3).map(f => `
+      let rawFeatures = product.features || [];
+      if (typeof rawFeatures === 'string') rawFeatures = rawFeatures.split('\n').filter(f => f.trim());
+      const featuresList = rawFeatures.slice(0, 3).map(f => `
         <div class="product-feature-item"><span class="feature-check">✓</span> ${escapeHtml(f)}</div>
       `).join('');
 
       return `
         <div class="product-card" data-category="${categoryAttr}">
           <div class="product-visual">
-            <img src="${product.image || 'assets/images/products/apex-scalper.svg'}" alt="${escapeHtml(product.name)}" style="max-height: 140px;">
+            <img src="${product.image || 'assets/images/products/apex-scalper.svg'}" alt="${escapeHtml(name)}" style="max-height: 140px;">
             <span class="badge ${product.platformBadge || 'badge-mt5'} product-badge-float">${escapeHtml(product.platform || 'Trading Software')}</span>
           </div>
           <div class="product-content">
@@ -180,15 +239,15 @@ const ContentRenderer = (() => {
               <span class="badge badge-cyan">${escapeHtml(product.version || 'v1.0')}</span>
               <span class="product-version">⭐ ${product.rating || '5.0'} (${product.reviewsCount || 10} Reviews)</span>
             </div>
-            <h2 class="product-title" style="font-size: var(--text-xl);">${escapeHtml(product.name)}</h2>
-            <p class="product-desc">${escapeHtml(product.shortDesc || product.tagline || '')}</p>
+            <h2 class="product-title" style="font-size: var(--text-xl);">${escapeHtml(name)}</h2>
+            <p class="product-desc">${escapeHtml(desc)}</p>
             <div class="product-features-list">
               ${featuresList}
             </div>
             <div class="product-footer">
               <div class="product-price">
                 <span class="price-label">${escapeHtml(product.billingType || 'One-Time License')}</span>
-                <span class="price-amount">${escapeHtml(product.priceFormatted || '$' + product.price)}</span>
+                <span class="price-amount">${escapeHtml(priceStr)}</span>
               </div>
               <div style="display: flex; gap: 6px;">
                 <button type="button" class="btn btn-secondary btn-sm" data-product-id="${product.id}" data-action="view">Details</button>
@@ -206,8 +265,15 @@ const ContentRenderer = (() => {
     if (!filterButtons.length) return;
 
     filterButtons.forEach(btn => {
+      // Remove old listeners by cloning
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+    });
+
+    const refreshedButtons = document.querySelectorAll('.filter-nav .filter-btn');
+    refreshedButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
+        refreshedButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
         const filter = btn.getAttribute('data-filter');
@@ -231,14 +297,24 @@ const ContentRenderer = (() => {
 
   function renderServicesPage() {
     const container = document.getElementById('services-grid-container');
-    if (!container || typeof SERVICES_DATA === 'undefined') return;
+    if (!container) return;
 
-    container.innerHTML = SERVICES_DATA.map(service => {
-      const benefitsList = (service.benefits || []).map(b => `
-        <li><span class="feature-check">✓</span> ${escapeHtml(b)}</li>
-      `).join('');
+    const services = getData('services');
 
-      const techString = (service.technologies || []).join(' • ');
+    container.innerHTML = services.map(service => {
+      const title = service.title || service.name || 'Custom Engineering';
+      const desc = service.detailedDesc || service.shortDesc || service.description || '';
+
+      let rawBenefits = service.benefits || service.features || [];
+      if (typeof rawBenefits === 'string') rawBenefits = rawBenefits.split('\n').filter(b => b.trim());
+      const benefitsList = rawBenefits.map(b => {
+        const text = typeof b === 'object' ? (b.text || b.title || '') : b;
+        return `<li><span class="feature-check">✓</span> ${escapeHtml(text)}</li>`;
+      }).join('');
+
+      let rawTechs = service.technologies || [];
+      if (typeof rawTechs === 'string') rawTechs = rawTechs.split(',').map(s => s.trim());
+      const techString = Array.isArray(rawTechs) ? rawTechs.join(' • ') : '';
 
       return `
         <div class="glass-card">
@@ -246,9 +322,9 @@ const ContentRenderer = (() => {
             <span class="badge badge-cyan">${escapeHtml(service.category || 'Trading Service')}</span>
             ${service.badge ? `<span class="badge badge-success">${escapeHtml(service.badge)}</span>` : ''}
           </div>
-          <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-3);">${escapeHtml(service.title)}</h2>
+          <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-3);">${escapeHtml(title)}</h2>
           <p style="font-size: var(--text-sm); line-height: 1.6; margin-bottom: var(--space-4);">
-            ${escapeHtml(service.detailedDesc || service.shortDesc || '')}
+            ${escapeHtml(desc)}
           </p>
           <div style="background: var(--bg-tertiary); padding: var(--space-4); border-radius: var(--radius-md); margin-bottom: var(--space-5);">
             <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Key Deliverables</div>
@@ -258,7 +334,7 @@ const ContentRenderer = (() => {
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-cyan);">${escapeHtml(techString)}</div>
-            <a href="contact.html?service=${encodeURIComponent(service.title)}" class="btn btn-primary btn-sm">${escapeHtml(service.ctaText || 'Request Quote')}</a>
+            <a href="contact.html?service=${encodeURIComponent(title)}" class="btn btn-primary btn-sm">${escapeHtml(service.ctaText || 'Request Quote')}</a>
           </div>
         </div>
       `;
@@ -271,10 +347,15 @@ const ContentRenderer = (() => {
 
   function renderPortfolioPage() {
     const container = document.getElementById('portfolio-grid-container');
-    if (!container || typeof PORTFOLIO_DATA === 'undefined') return;
+    if (!container) return;
 
-    container.innerHTML = PORTFOLIO_DATA.map(project => {
-      const metricsHtml = (project.metrics || []).slice(0, 3).map(m => `
+    const portfolio = getData('portfolio');
+
+    container.innerHTML = portfolio.map(project => {
+      const title = project.title || project.name || 'Case Study';
+      const desc = project.description || project.desc || '';
+      const rawMetrics = project.metrics || [];
+      const metricsHtml = (Array.isArray(rawMetrics) ? rawMetrics : []).slice(0, 3).map(m => `
         <div class="metric-item">
           <span class="metric-label">${escapeHtml(m.label)}</span>
           <span class="metric-val" style="color: var(--accent-green);">${escapeHtml(m.value)}</span>
@@ -284,12 +365,12 @@ const ContentRenderer = (() => {
       return `
         <div class="project-card" data-category="${escapeHtml(project.category || 'all')}" data-project-id="${project.id}" style="cursor: pointer;">
           <div class="project-preview">
-            <img src="${project.image || 'assets/images/portfolio/project-mt5-ea.svg'}" alt="${escapeHtml(project.title)}">
+            <img src="${project.image || 'assets/images/portfolio/project-mt5-ea.svg'}" alt="${escapeHtml(title)}">
           </div>
           <div class="project-info">
             <span class="project-category">${escapeHtml(project.categoryLabel || project.category || 'Case Study')}</span>
-            <h2 class="project-title" style="font-size: var(--text-xl);">${escapeHtml(project.title)}</h2>
-            <p class="project-desc">${escapeHtml(project.description || '')}</p>
+            <h2 class="project-title" style="font-size: var(--text-xl);">${escapeHtml(title)}</h2>
+            <p class="project-desc">${escapeHtml(desc)}</p>
             
             <div class="project-metrics">
               ${metricsHtml}
@@ -314,11 +395,17 @@ const ContentRenderer = (() => {
 
   function renderReviewsPage() {
     const container = document.getElementById('reviews-grid-container');
-    if (!container || typeof REVIEWS_DATA === 'undefined') return;
+    if (!container) return;
 
-    container.innerHTML = REVIEWS_DATA.map(review => {
-      const stars = '★'.repeat(review.rating || 5);
-      const avatar = review.avatar || (review.clientName ? review.clientName.substring(0, 2).toUpperCase() : 'CL');
+    const reviews = getData('reviews');
+
+    container.innerHTML = reviews.map(review => {
+      const name = review.clientName || review.name || review.author || 'Verified Client';
+      const comment = review.comment || review.quote || review.text || review.description || '';
+      const location = review.country || review.location || '';
+      const role = review.role || review.title || 'Trader';
+      const stars = '★'.repeat(parseInt(review.rating, 10) || 5);
+      const avatar = review.avatar || (name ? name.substring(0, 2).toUpperCase() : 'TR');
 
       return `
         <div class="review-card">
@@ -326,12 +413,12 @@ const ContentRenderer = (() => {
             <div class="stars-row" style="font-size: 16px;">${stars}</div>
             <span class="badge badge-success" style="font-size: 10px;">Verified Client</span>
           </div>
-          <p class="review-quote">"${escapeHtml(review.comment)}"</p>
+          <p class="review-quote">"${escapeHtml(comment)}"</p>
           <div class="review-author" style="margin-top: auto;">
             <div class="author-avatar">${avatar}</div>
             <div class="author-info">
-              <span class="author-name">${escapeHtml(review.clientName)}</span>
-              <span class="author-location">${escapeHtml(review.country || '')} • ${escapeHtml(review.role || 'Client')}</span>
+              <span class="author-name">${escapeHtml(name)}</span>
+              <span class="author-location">${escapeHtml(location)}${location ? ' • ' : ''}${escapeHtml(role)}</span>
               ${review.serviceUsed ? `<span style="font-size: 10px; color: var(--accent-cyan); font-family: var(--font-mono); margin-top: 2px;">${escapeHtml(review.serviceUsed)}</span>` : ''}
             </div>
           </div>
@@ -352,6 +439,7 @@ const ContentRenderer = (() => {
 
   return {
     init,
+    getData,
     renderHomeSections,
     renderProductsPage,
     renderServicesPage,
