@@ -810,6 +810,30 @@
 .footer-copyright {
   font-size: var(--text-xs);
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-admin-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  opacity: 0.35;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+}
+
+.footer-admin-trigger:hover {
+  opacity: 1;
+  color: var(--accent-cyan);
+  background: var(--bg-tertiary);
 }
 
 .footer-disclaimer {
@@ -818,3 +842,154 @@
   max-width: 600px;
   line-height: 1.4;
 }
+
+/* --------------------------------------------------------------------------
+   11. Admin Floating Toolbar & Quick Access Modal
+   -------------------------------------------------------------------------- */
+.admin-floating-bar {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px 8px 16px;
+  background: rgba(10, 15, 29, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  border-radius: 100px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 229, 255, 0.2);
+  animation: slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-sans);
+}
+
+.admin-floating-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.admin-floating-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+  animation: pulseGreen 2s infinite;
+}
+
+.admin-floating-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-floating-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.admin-floating-btn-dashboard {
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(0, 230, 118, 0.2));
+  border: 1px solid var(--accent-cyan);
+  color: #ffffff;
+}
+
+.admin-floating-btn-dashboard:hover {
+  background: var(--accent-cyan);
+  color: #000000;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+
+.admin-floating-btn-logout {
+  background: rgba(255, 51, 102, 0.1);
+  border: 1px solid rgba(255, 51, 102, 0.3);
+  color: var(--accent-rose);
+}
+
+.admin-floating-btn-logout:hover {
+  background: var(--accent-rose);
+  color: #ffffff;
+}
+
+/* Admin Quick Login Modal */
+.admin-quick-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 7, 14, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+}
+
+.admin-quick-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.admin-quick-modal {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(0, 229, 255, 0.15);
+  transform: translateY(20px) scale(0.96);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.admin-quick-modal-overlay.active .admin-quick-modal {
+  transform: translateY(0) scale(1);
+}
+
+.admin-quick-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all var(--transition-fast);
+}
+
+.admin-quick-close:hover {
+  background: var(--accent-rose);
+  color: #fff;
+  border-color: var(--accent-rose);
+}
+

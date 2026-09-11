@@ -5,13 +5,14 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  loadAdminOverrides();
   initNavbar();
   initMobileDrawer();
   initDynamicBranding();
   initAccordions();
   initToasts();
   highlightActiveNav();
-  loadAdminOverrides();
+  initAdminQuickAccess();
 });
 
 /**
@@ -189,7 +190,8 @@ function loadAdminOverrides() {
     products: 'hassan_admin_products',
     services: 'hassan_admin_services',
     portfolio: 'hassan_admin_portfolio',
-    reviews: 'hassan_admin_reviews'
+    reviews: 'hassan_admin_reviews',
+    config: 'hassan_admin_config'
   };
 
   // Override global data if admin has modified it
@@ -211,6 +213,9 @@ function loadAdminOverrides() {
           case 'reviews':
             if (typeof window.REVIEWS_DATA !== 'undefined') window.REVIEWS_DATA = data;
             break;
+          case 'config':
+            if (typeof window.SITE_CONFIG !== 'undefined') window.SITE_CONFIG = data;
+            break;
         }
       } catch (e) {
         // Invalid JSON, skip override
@@ -218,3 +223,164 @@ function loadAdminOverrides() {
     }
   });
 }
+
+/**
+ * ============================================================================
+ * Admin Quick Access & Floating Toolbar
+ * ============================================================================
+ * Discreet admin trigger:
+ * - Shortcut: Ctrl + Shift + A (or Cmd + Shift + A)
+ * - Footer Trigger: Click on the discreet lock icon
+ * - Floating Bar: Appears ONLY when Hassan is authenticated
+ * ============================================================================
+ */
+function initAdminQuickAccess() {
+  // Don't inject floating bar on the admin page itself
+  const isCurrentAdminPage = window.location.pathname.endsWith('admin.html');
+  if (isCurrentAdminPage) return;
+
+  // Check if user is currently authenticated
+  const isAuthenticated = typeof AdminAuth !== 'undefined' && AdminAuth.isAuthenticated();
+
+  if (isAuthenticated) {
+    renderAdminFloatingBar();
+  }
+
+  // Keyboard shortcut listener (Ctrl + Shift + A or Cmd + Shift + A)
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      triggerAdminAccess();
+    }
+  });
+
+  // Footer lock icon trigger listener
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.footer-admin-trigger');
+    if (trigger) {
+      e.preventDefault();
+      triggerAdminAccess();
+    }
+  });
+}
+
+function triggerAdminAccess() {
+  if (typeof AdminAuth !== 'undefined' && AdminAuth.isAuthenticated()) {
+    window.location.href = 'admin.html';
+  } else {
+    openAdminQuickModal();
+  }
+}
+
+function renderAdminFloatingBar() {
+  if (document.getElementById('admin-floating-bar')) return;
+
+  const bar = document.createElement('div');
+  bar.id = 'admin-floating-bar';
+  bar.className = 'admin-floating-bar';
+  bar.innerHTML = `
+    <div class="admin-floating-status">
+      <span class="admin-floating-pulse"></span>
+      <span>Admin Active</span>
+    </div>
+    <div class="admin-floating-actions">
+      <a href="admin.html" class="admin-floating-btn admin-floating-btn-dashboard">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <button type="button" class="admin-floating-btn admin-floating-btn-logout" id="admin-floating-logout">
+        <span>Logout</span>
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(bar);
+
+  const logoutBtn = document.getElementById('admin-floating-logout');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      if (typeof AdminAuth !== 'undefined') AdminAuth.logout();
+      bar.remove();
+      if (window.showToast) window.showToast('Admin session logged out', 'info');
+    });
+  }
+}
+
+function openAdminQuickModal() {
+  let modalOverlay = document.getElementById('admin-quick-modal-overlay');
+  if (!modalOverlay) {
+    modalOverlay = document.createElement('div');
+    modalOverlay.id = 'admin-quick-modal-overlay';
+    modalOverlay.className = 'admin-quick-modal-overlay';
+    modalOverlay.innerHTML = `
+      <div class="admin-quick-modal">
+        <button type="button" class="admin-quick-close" id="admin-quick-close-btn">&times;</button>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-cyan);"></span>
+          <span style="font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700;">Hassan Platform</span>
+        </div>
+        <h3 style="font-size: var(--text-xl); margin-bottom: 6px; color: var(--text-primary);">Owner Admin Access</h3>
+        <p style="font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-6);">Enter your password to manage website content and live data.</p>
+        <form id="admin-quick-form">
+          <input type="password" id="admin-quick-password" class="admin-login-input" placeholder="Enter admin password" style="margin-bottom: var(--space-3);" autocomplete="current-password" autofocus>
+          <div id="admin-quick-error" style="font-size: 11px; color: var(--accent-rose); min-height: 16px; margin-bottom: var(--space-4);"></div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <span>Login to Admin Panel</span>
+          </button>
+        </form>
+      </div>
+    `;
+    document.body.appendChild(modalOverlay);
+
+    // Close button
+    document.getElementById('admin-quick-close-btn').addEventListener('click', closeAdminQuickModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeAdminQuickModal();
+    });
+
+    // Form submit
+    document.getElementById('admin-quick-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pwInput = document.getElementById('admin-quick-password');
+      const errEl = document.getElementById('admin-quick-error');
+      const password = pwInput.value.trim();
+
+      if (!password) {
+        errEl.textContent = 'Please enter password';
+        return;
+      }
+
+      if (typeof AdminAuth !== 'undefined') {
+        const isValid = await AdminAuth.verifyPassword(password);
+        if (isValid) {
+          AdminAuth.createSession();
+          errEl.textContent = '';
+          closeAdminQuickModal();
+          if (window.showToast) window.showToast('Login successful! Opening Dashboard...', 'success');
+          setTimeout(() => {
+            window.location.href = 'admin.html';
+          }, 400);
+        } else {
+          errEl.textContent = 'Incorrect password. Please try again.';
+          pwInput.value = '';
+          pwInput.focus();
+        }
+      }
+    });
+  }
+
+  modalOverlay.classList.add('active');
+  const pwInput = document.getElementById('admin-quick-password');
+  if (pwInput) {
+    pwInput.value = '';
+    setTimeout(() => pwInput.focus(), 100);
+  }
+}
+
+function closeAdminQuickModal() {
+  const modalOverlay = document.getElementById('admin-quick-modal-overlay');
+  if (modalOverlay) {
+    modalOverlay.classList.remove('active');
+  }
+}
+
