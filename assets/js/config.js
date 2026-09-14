@@ -3,23 +3,26 @@
  * Hassan Platform - Global Site Configuration
  * ============================================================================
  * Centralized settings for branding, contact links, social profiles, and SEO.
- * Modify this file to update site-wide information without editing HTML files.
+ * Modify this file or use the Admin Panel to update site-wide information.
+ * ============================================================================
  */
 
-const SITE_CONFIG = {
+var SITE_CONFIG = {
   brand: {
-    name: "Hassan Platform",
+    name: "HASSAN",
+    suffix: ".ALGO",
+    tag: "PRO",
     tagline: "Quantitative Trading & Automation Specialist",
     shortBio: "Developing institutional-grade MetaTrader 4/5 EAs, Python algorithmic trading bots, and Interactive Brokers API automations for global traders & funds.",
     logoText: "HASSAN",
     logoHighlight: "PRO",
-    statusText: "AVAILABLE FOR CUSTOM EA & BOT PROJECTS",
+    statusText: "AVAILABLE FOR PROJECTS",
     foundedYear: 2020
   },
 
   author: {
     name: "M. Hassan",
-    title: "Senior Algorithmic Trading Systems Engineer & Full-Stack Developer",
+    title: "Trading Systems Engineer",
     location: "Global / Remote Solutions",
     experienceYears: "6+",
     completedProjects: "140+",
@@ -27,10 +30,26 @@ const SITE_CONFIG = {
     totalAutomatedVolume: "$45M+"
   },
 
+  hero: {
+    status: "AVAILABLE FOR PROJECTS",
+    line1: "I Build",
+    highlight: "Trading Algorithms",
+    line2: "That Actually Work",
+    description: "Professional developer specializing in MetaTrader 4/5 Expert Advisors, Python trading bots, and Interactive Brokers automation. Trusted by prop traders, fund managers, and quantitative investors globally.",
+    profileImage: "assets/images/brand/hassan-profile.jpg",
+    stat1Val: "140+",
+    stat1Label: "EAs & Bots Deployed",
+    stat2Val: "6+",
+    stat2Label: "Years Experience",
+    stat3Val: "5.0",
+    stat3Label: "Client Rating"
+  },
+
   contact: {
-    email: "contact@yourdomain.com",
-    telegram: "@your_telegram_handle",
-    telegramUrl: "https://t.me/",
+    email: "contact@hassanplatform.com",
+    telegram: "@HassanAlgo",
+    telegramUrl: "https://t.me/HassanAlgo",
+    whatsapp: "+92 300 0000000",
     githubUrl: "https://github.com/Shifrozy/hassan-platform",
     linkedinUrl: "#",
     discordUrl: "#",
@@ -38,8 +57,8 @@ const SITE_CONFIG = {
   },
 
   meta: {
-    siteUrl: "https://yourdomain.com",
-    ogImage: "assets/images/brand/og-preview.png",
+    siteUrl: "https://hassan-platform.pages.dev",
+    ogImage: "assets/images/brand/hassan-profile.jpg",
     twitterHandle: "@your_handle"
   },
 

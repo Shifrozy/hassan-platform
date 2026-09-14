@@ -68,36 +68,154 @@ function initMobileDrawer() {
 }
 
 /**
- * Injects dynamic branding and links from SITE_CONFIG
+ * Injects dynamic branding and links from localStorage (hassan_admin_config) or SITE_CONFIG
  */
-function initDynamicBranding() {
-  if (typeof SITE_CONFIG === 'undefined') return;
+function getActiveSiteConfig() {
+  const defaults = {
+    brandName: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.name) || 'HASSAN',
+    brandSuffix: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.suffix) || '.ALGO',
+    brandTag: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.tag) || 'PRO',
+    devName: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.author?.name) || 'M. Hassan',
+    devTitle: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.author?.title) || 'Trading Systems Engineer',
+    heroStatus: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.status) || 'AVAILABLE FOR PROJECTS',
+    heroLine1: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.line1) || 'I Build',
+    heroHighlight: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.highlight) || 'Trading Algorithms',
+    heroLine2: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.line2) || 'That Actually Work',
+    heroDescription: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.description) || 'Professional developer specializing in MetaTrader 4/5 Expert Advisors, Python trading bots, and Interactive Brokers automation. Trusted by prop traders, fund managers, and quantitative investors globally.',
+    profileImage: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.profileImage) || 'assets/images/brand/hassan-profile.jpg',
+    stat1Val: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat1Val) || '140+',
+    stat1Label: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat1Label) || 'EAs & Bots Deployed',
+    stat2Val: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat2Val) || '6+',
+    stat2Label: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat2Label) || 'Years Experience',
+    stat3Val: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat3Val) || '5.0',
+    stat3Label: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat3Label) || 'Client Rating',
+    contactEmail: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.email) || 'contact@hassanplatform.com',
+    telegramUrl: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.telegramUrl) || 'https://t.me/HassanAlgo',
+    telegramHandle: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.telegram) || '@HassanAlgo',
+    whatsapp: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.whatsapp) || '',
+    githubUrl: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.githubUrl) || 'https://github.com/Shifrozy/hassan-platform',
+    footerBio: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.shortBio) || 'Developing institutional-grade MetaTrader 4/5 EAs, Python algorithmic trading bots, and Interactive Brokers API automations for global traders & funds.'
+  };
 
-  // Update current copyright year
-  const yearElements = document.querySelectorAll('.current-year');
-  const currentYear = new Date().getFullYear();
-  yearElements.forEach(el => {
-    el.textContent = currentYear;
-  });
-
-  // Inject dynamic social & contact links where data-config attribute exists
-  document.querySelectorAll('[data-config]').forEach(el => {
-    const key = el.getAttribute('data-config');
-    const value = getNestedConfig(SITE_CONFIG, key);
-    if (value) {
-      if (el.tagName === 'A') {
-        if (el.getAttribute('href') === '#') {
-          el.setAttribute('href', value);
-        }
-      } else {
-        el.textContent = value;
+  const stored = localStorage.getItem('hassan_admin_config');
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (parsed && typeof parsed === 'object') {
+        return { ...defaults, ...parsed };
       }
-    }
-  });
+    } catch (e) {}
+  }
+  return defaults;
 }
 
-function getNestedConfig(obj, path) {
-  return path.split('.').reduce((prev, curr) => prev ? prev[curr] : null, obj);
+function initDynamicBranding() {
+  const config = getActiveSiteConfig();
+
+  // 1. Current copyright year
+  document.querySelectorAll('.current-year').forEach(el => {
+    el.textContent = new Date().getFullYear();
+  });
+
+  // 2. Brand Logo Text (Navbar, Drawer, Footer, Admin)
+  document.querySelectorAll('.brand-logo-text').forEach(el => {
+    // If inside admin brand tag, preserve or format cleanly
+    const name = config.brandName || 'HASSAN';
+    const suffix = config.brandSuffix || '.ALGO';
+    el.innerHTML = `${escapeHtml(name)}<span>${escapeHtml(suffix)}</span>`;
+  });
+
+  // 3. Brand Badges / Tags
+  document.querySelectorAll('.brand-tag:not(.brand-tag-admin)').forEach(el => {
+    if (config.brandTag) el.textContent = config.brandTag;
+  });
+
+  // 4. Hero Title & Text (if present on page)
+  const heroTitle = document.querySelector('.hero-title');
+  if (heroTitle && config.heroLine1) {
+    heroTitle.innerHTML = `
+      ${escapeHtml(config.heroLine1)} <br>
+      <span class="gradient-text-cyan">${escapeHtml(config.heroHighlight || 'Trading Algorithms')}</span> <br>
+      ${escapeHtml(config.heroLine2 || 'That Actually Work')}
+    `;
+  }
+
+  const heroDesc = document.querySelector('.hero-description');
+  if (heroDesc && config.heroDescription) {
+    heroDesc.textContent = config.heroDescription;
+  }
+
+  const heroStatus = document.querySelector('.hero-status-pill .status-text');
+  if (heroStatus && config.heroStatus) {
+    heroStatus.textContent = config.heroStatus;
+  }
+
+  // 5. Hero Profile Picture
+  if (config.profileImage) {
+    document.querySelectorAll('.hero-profile-image').forEach(img => {
+      img.src = config.profileImage;
+    });
+  }
+
+  // 6. Hero Profile Badge
+  const heroBadge = document.querySelector('.hero-profile-badge span');
+  if (heroBadge && config.devTitle) {
+    heroBadge.textContent = config.devTitle;
+  }
+
+  // 7. Hero Stats Cards
+  const statCards = document.querySelectorAll('.hero-stats-row .stat-card');
+  if (statCards.length >= 3) {
+    if (config.stat1Val) {
+      const valEl = statCards[0].querySelector('.stat-value');
+      const lblEl = statCards[0].querySelector('.stat-label');
+      if (valEl) valEl.textContent = config.stat1Val;
+      if (lblEl && config.stat1Label) lblEl.textContent = config.stat1Label;
+    }
+    if (config.stat2Val) {
+      const valEl = statCards[1].querySelector('.stat-value');
+      const lblEl = statCards[1].querySelector('.stat-label');
+      if (valEl) valEl.textContent = config.stat2Val;
+      if (lblEl && config.stat2Label) lblEl.textContent = config.stat2Label;
+    }
+    if (config.stat3Val) {
+      const valEl = statCards[2].querySelector('.stat-value');
+      const lblEl = statCards[2].querySelector('.stat-label');
+      if (valEl) valEl.textContent = config.stat3Val;
+      if (lblEl && config.stat3Label) lblEl.textContent = config.stat3Label;
+    }
+  }
+
+  // 8. Footer Short Bio
+  if (config.footerBio) {
+    document.querySelectorAll('[data-config="brand.shortBio"]').forEach(el => {
+      el.textContent = config.footerBio;
+    });
+  }
+
+  // 9. Contact Links (Email, Telegram, WhatsApp, GitHub)
+  if (config.contactEmail) {
+    document.querySelectorAll('a[aria-label="Email"], a[href^="mailto:"]').forEach(a => {
+      a.href = `mailto:${config.contactEmail}`;
+    });
+  }
+  if (config.telegramUrl) {
+    document.querySelectorAll('a[aria-label="Telegram"]').forEach(a => {
+      a.href = config.telegramUrl;
+    });
+  }
+  if (config.githubUrl) {
+    document.querySelectorAll('a[aria-label="GitHub"]').forEach(a => {
+      a.href = config.githubUrl;
+    });
+  }
+}
+
+function escapeHtml(str) {
+  if (typeof str !== 'string') return str || '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 /**

@@ -1,17 +1,45 @@
-# Personal / Private Files
-My_Image.png
+# =============================================================================
+# Hassan Platform - Comprehensive Git Ignore Rules
+# =============================================================================
 
-# Operating System Files
-.DS_Store
-Thumbs.db
-desktop.ini
+# Personal & Unprocessed Photos / Raw Assets
+My_Image.*
+my_image.*
+*.heic
+*.raw
+*.psd
+personal/
+private/
+secrets/
+*.bak
+*.backup
 
-# Environment & Secrets
+# Proprietary Trading Strategy Source Code
+*.mq4
+*.mq5
+*.ex4
+*.ex5
+*.set
+*.tpl
+quant_models/
+trading_bots/
+
+# Environment, Secrets & Credentials
 .env
 .env.local
 .env.*.local
 *.pem
 *.key
+*.cert
+*.pfx
+credentials.json
+token.json
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
 
 # Editor & IDE Directories
 .vscode/
@@ -19,7 +47,7 @@ desktop.ini
 *.sublime-project
 *.sublime-workspace
 
-# Build & Dependency Artifacts (For future phases)
+# Build & Dependency Artifacts
 node_modules/
 dist/
 build/
@@ -33,3 +61,5 @@ __pycache__/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+tmp/
+temp/

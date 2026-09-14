@@ -138,6 +138,7 @@ const AdminApp = (() => {
       case 'services': renderDataTable('services'); break;
       case 'portfolio': renderDataTable('portfolio'); break;
       case 'reviews': renderDataTable('reviews'); break;
+      case 'branding': renderBrandingPage(); break;
       case 'settings': renderSettings(); break;
     }
   }
@@ -304,8 +305,14 @@ const AdminApp = (() => {
       
       switch (type) {
         case 'products':
+          const prodThumb = item.image ? `<img src="${item.image}" style="width: 26px; height: 26px; border-radius: 4px; object-fit: cover; border: 1px solid var(--border-subtle); flex-shrink: 0;" alt="Thumb">` : `<span style="font-size: 16px;">📦</span>`;
           row.innerHTML = `
-            <td><strong>${item.name || item.title || '—'}</strong></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                ${prodThumb}
+                <strong>${item.name || item.title || '—'}</strong>
+              </div>
+            </td>
             <td><span class="badge badge-mt5">${item.platform || '—'}</span></td>
             <td style="font-family: var(--font-mono); color: var(--accent-green);">$${item.price || '—'}</td>
             <td>${item.version || '—'}</td>
@@ -337,8 +344,14 @@ const AdminApp = (() => {
           break;
 
         case 'portfolio':
+          const portThumb = item.image ? `<img src="${item.image}" style="width: 26px; height: 26px; border-radius: 4px; object-fit: cover; border: 1px solid var(--border-subtle); flex-shrink: 0;" alt="Thumb">` : `<span style="font-size: 16px;">📊</span>`;
           row.innerHTML = `
-            <td><strong>${item.title || item.name || '—'}</strong></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                ${portThumb}
+                <strong>${item.title || item.name || '—'}</strong>
+              </div>
+            </td>
             <td><span class="badge badge-cyan">${item.category || '—'}</span></td>
             <td>${item.client || '—'}</td>
             <td class="actions-cell">
@@ -454,6 +467,23 @@ const AdminApp = (() => {
             </div>
           </div>
           <div class="admin-form-group">
+            <label class="admin-form-label">Product Picture / Banner</label>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <input class="admin-form-input" name="image" id="modal-product-img-input" value="${val('image')}" placeholder="Image URL (assets/images/... or https://...)">
+              <label class="btn btn-secondary btn-sm" style="cursor: pointer; white-space: nowrap;">
+                <span>Upload Picture</span>
+                <input type="file" accept="image/*" style="display: none;" onchange="AdminApp.handleImageUpload(event, 'modal-product-img-input', 'modal-product-img-preview')">
+              </label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 80px; height: 60px; border-radius: 6px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img id="modal-product-img-preview" src="${val('image') || ''}" style="${val('image') ? 'width: 100%; height: 100%; object-fit: cover;' : 'display: none;'}" alt="Preview">
+                <span id="modal-product-img-placeholder" style="${val('image') ? 'display: none;' : 'font-size: 10px; color: var(--text-muted);'}">No Image</span>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" style="font-size: 11px;" onclick="AdminApp.clearImage('modal-product-img-input', 'modal-product-img-preview')">Clear Picture</button>
+            </div>
+          </div>
+          <div class="admin-form-group">
             <label class="admin-form-label">Description</label>
             <textarea class="admin-form-textarea" name="description" placeholder="Brief product description...">${val('description') || val('desc')}</textarea>
           </div>
@@ -511,6 +541,23 @@ const AdminApp = (() => {
             <div class="admin-form-group">
               <label class="admin-form-label">Client</label>
               <input class="admin-form-input" name="client" value="${val('client')}" placeholder="Client name or 'Confidential'">
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Project Picture / Diagram</label>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+              <input class="admin-form-input" name="image" id="modal-portfolio-img-input" value="${val('image')}" placeholder="Image URL (assets/images/... or https://...)">
+              <label class="btn btn-secondary btn-sm" style="cursor: pointer; white-space: nowrap;">
+                <span>Upload Picture</span>
+                <input type="file" accept="image/*" style="display: none;" onchange="AdminApp.handleImageUpload(event, 'modal-portfolio-img-input', 'modal-portfolio-img-preview')">
+              </label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 80px; height: 60px; border-radius: 6px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <img id="modal-portfolio-img-preview" src="${val('image') || ''}" style="${val('image') ? 'width: 100%; height: 100%; object-fit: cover;' : 'display: none;'}" alt="Preview">
+                <span id="modal-portfolio-img-placeholder" style="${val('image') ? 'display: none;' : 'font-size: 10px; color: var(--text-muted);'}">No Image</span>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" style="font-size: 11px;" onclick="AdminApp.clearImage('modal-portfolio-img-input', 'modal-portfolio-img-preview')">Clear Picture</button>
             </div>
           </div>
           <div class="admin-form-group">
@@ -687,6 +734,176 @@ const AdminApp = (() => {
   }
 
   // =========================================================================
+  // Branding & Site Identity Page
+  // =========================================================================
+
+  function renderBrandingPage() {
+    let config = {};
+    const stored = localStorage.getItem('hassan_admin_config');
+    if (stored) {
+      try { config = JSON.parse(stored) || {}; } catch (e) {}
+    }
+
+    const val = (k, def) => (config[k] !== undefined && config[k] !== null) ? config[k] : (def || '');
+
+    setVal('brand-input-name', val('brandName', 'HASSAN'));
+    setVal('brand-input-suffix', val('brandSuffix', '.ALGO'));
+    setVal('brand-input-tag', val('brandTag', 'PRO'));
+    setVal('brand-input-devname', val('devName', 'M. Hassan'));
+    setVal('brand-input-devtitle', val('devTitle', 'Trading Systems Engineer'));
+    setVal('brand-input-profile-img', val('profileImage', 'assets/images/brand/hassan-profile.jpg'));
+    setVal('brand-input-status', val('heroStatus', 'AVAILABLE FOR PROJECTS'));
+    setVal('brand-input-line1', val('heroLine1', 'I Build'));
+    setVal('brand-input-highlight', val('heroHighlight', 'Trading Algorithms'));
+    setVal('brand-input-line2', val('heroLine2', 'That Actually Work'));
+    setVal('brand-input-description', val('heroDescription', 'Professional developer specializing in MetaTrader 4/5 Expert Advisors, Python trading bots, and Interactive Brokers automation. Trusted by prop traders, fund managers, and quantitative investors globally.'));
+    setVal('brand-input-stat1-val', val('stat1Val', '140+'));
+    setVal('brand-input-stat1-lbl', val('stat1Label', 'EAs & Bots Deployed'));
+    setVal('brand-input-stat2-val', val('stat2Val', '6+'));
+    setVal('brand-input-stat2-lbl', val('stat2Label', 'Years Experience'));
+    setVal('brand-input-stat3-val', val('stat3Val', '5.0'));
+    setVal('brand-input-stat3-lbl', val('stat3Label', 'Client Rating'));
+    setVal('brand-input-email', val('contactEmail', 'contact@hassanplatform.com'));
+    setVal('brand-input-telegram', val('telegramUrl', 'https://t.me/HassanAlgo'));
+    setVal('brand-input-whatsapp', val('whatsapp', ''));
+    setVal('brand-input-github', val('githubUrl', 'https://github.com/Shifrozy/hassan-platform'));
+    setVal('brand-input-bio', val('footerBio', 'Developing institutional-grade MetaTrader 4/5 EAs, Python algorithmic trading bots, and Interactive Brokers API automations for global traders & funds.'));
+
+    const profileImgPreview = document.getElementById('brand-preview-profile-img');
+    if (profileImgPreview) {
+      profileImgPreview.src = val('profileImage', 'assets/images/brand/hassan-profile.jpg');
+    }
+  }
+
+  function setVal(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  }
+
+  function saveBranding() {
+    const getV = (id) => {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    };
+
+    const config = {
+      brandName: getV('brand-input-name') || 'HASSAN',
+      brandSuffix: getV('brand-input-suffix') || '.ALGO',
+      brandTag: getV('brand-input-tag') || 'PRO',
+      devName: getV('brand-input-devname') || 'M. Hassan',
+      devTitle: getV('brand-input-devtitle') || 'Trading Systems Engineer',
+      profileImage: getV('brand-input-profile-img') || 'assets/images/brand/hassan-profile.jpg',
+      heroStatus: getV('brand-input-status') || 'AVAILABLE FOR PROJECTS',
+      heroLine1: getV('brand-input-line1') || 'I Build',
+      heroHighlight: getV('brand-input-highlight') || 'Trading Algorithms',
+      heroLine2: getV('brand-input-line2') || 'That Actually Work',
+      heroDescription: getV('brand-input-description'),
+      stat1Val: getV('brand-input-stat1-val'),
+      stat1Label: getV('brand-input-stat1-lbl'),
+      stat2Val: getV('brand-input-stat2-val'),
+      stat2Label: getV('brand-input-stat2-lbl'),
+      stat3Val: getV('brand-input-stat3-val'),
+      stat3Label: getV('brand-input-stat3-lbl'),
+      contactEmail: getV('brand-input-email'),
+      telegramUrl: getV('brand-input-telegram'),
+      whatsapp: getV('brand-input-whatsapp'),
+      githubUrl: getV('brand-input-github'),
+      footerBio: getV('brand-input-bio')
+    };
+
+    localStorage.setItem('hassan_admin_config', JSON.stringify(config));
+
+    // Update branding in the current admin panel view immediately
+    document.querySelectorAll('.brand-logo-text').forEach(el => {
+      el.innerHTML = `${escapeHtml(config.brandName)}<span>${escapeHtml(config.brandSuffix)}</span>`;
+    });
+
+    if (typeof showToast === 'function') {
+      showToast('Branding updated! All website pages are now live with your changes.', 'success');
+    } else {
+      alert('Branding updated successfully! All website pages are now live with your changes.');
+    }
+  }
+
+  // =========================================================================
+  // Image Upload & Canvas Compression Handlers
+  // =========================================================================
+
+  function handleImageUpload(event, targetInputId, previewImgId) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload a valid image file (PNG, JPG, WebP, SVG).');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const rawDataUrl = e.target.result;
+      if (file.type.includes('svg')) {
+        applyImageToField(rawDataUrl, targetInputId, previewImgId);
+        return;
+      }
+
+      const img = new Image();
+      img.onload = function() {
+        const maxDim = 800;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL('image/jpeg', 0.82);
+        applyImageToField(compressed, targetInputId, previewImgId);
+      };
+      img.src = rawDataUrl;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function applyImageToField(dataUrl, targetInputId, previewImgId) {
+    const input = document.getElementById(targetInputId);
+    if (input) {
+      input.value = dataUrl;
+      input.dispatchEvent(new Event('input'));
+    }
+    const preview = document.getElementById(previewImgId);
+    if (preview) {
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+    }
+    const placeholder = document.getElementById(previewImgId.replace('-preview', '-placeholder'));
+    if (placeholder) placeholder.style.display = 'none';
+  }
+
+  function clearImage(targetInputId, previewImgId) {
+    const input = document.getElementById(targetInputId);
+    if (input) {
+      input.value = '';
+      input.dispatchEvent(new Event('input'));
+    }
+    const preview = document.getElementById(previewImgId);
+    if (preview) {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+    const placeholder = document.getElementById(previewImgId.replace('-preview', '-placeholder'));
+    if (placeholder) placeholder.style.display = 'block';
+  }
+
+  // =========================================================================
   // Utilities
   // =========================================================================
 
@@ -696,6 +913,13 @@ const AdminApp = (() => {
 
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return str || '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   // =========================================================================
@@ -714,6 +938,10 @@ const AdminApp = (() => {
     importData,
     resetData,
     handleChangePassword,
+    renderBrandingPage,
+    saveBranding,
+    handleImageUpload,
+    clearImage,
     getData,
     saveData
   };

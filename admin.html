@@ -114,6 +114,12 @@
           <span class="nav-count" id="nav-count-reviews">0</span>
         </button>
 
+        <div class="admin-nav-section">Personalization</div>
+        <button class="admin-nav-item" data-page="branding">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Site Branding</span>
+        </button>
+
         <div class="admin-nav-section">System</div>
         <button class="admin-nav-item" data-page="settings">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -281,6 +287,180 @@
             </thead>
             <tbody id="reviews-table-body"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- ===== Site Branding & Identity Page ===== -->
+      <div id="page-branding" class="admin-page">
+        <div class="admin-page-header">
+          <div>
+            <h1 class="admin-page-title">Site Branding & Identity</h1>
+            <p class="admin-page-subtitle">Customize website name, logo text, hero headlines, profile picture, and contact info</p>
+          </div>
+          <div>
+            <button class="btn btn-primary" onclick="AdminApp.saveBranding()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span>Save All Changes</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. Brand Logo & Name -->
+        <div class="admin-table-wrapper" style="margin-bottom: var(--space-6);">
+          <div class="admin-table-header">
+            <span class="admin-table-title">1. Brand Logo & Name</span>
+          </div>
+          <div style="padding: var(--space-6);">
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Brand Main Name</label>
+                <input class="admin-form-input" id="brand-input-name" placeholder="e.g. HASSAN">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Brand Suffix / Extension</label>
+                <input class="admin-form-input" id="brand-input-suffix" placeholder="e.g. .ALGO or .TECH">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Brand Badge / Tag</label>
+                <input class="admin-form-input" id="brand-input-tag" placeholder="e.g. PRO">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Hero Profile Photo & Badge -->
+        <div class="admin-table-wrapper" style="margin-bottom: var(--space-6);">
+          <div class="admin-table-header">
+            <span class="admin-table-title">2. Owner Profile Picture & Title</span>
+          </div>
+          <div style="padding: var(--space-6);">
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Developer Full Name</label>
+                <input class="admin-form-input" id="brand-input-devname" placeholder="e.g. M. Hassan">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Professional Role / Title</label>
+                <input class="admin-form-input" id="brand-input-devtitle" placeholder="e.g. Trading Systems Engineer">
+              </div>
+            </div>
+            <div class="admin-form-group" style="margin-top: var(--space-4);">
+              <label class="admin-form-label">Profile Picture (Hero Section)</label>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <input class="admin-form-input" id="brand-input-profile-img" placeholder="assets/images/brand/hassan-profile.jpg or Image URL">
+                <label class="btn btn-secondary btn-sm" style="cursor: pointer; white-space: nowrap;">
+                  <span>Upload Picture</span>
+                  <input type="file" accept="image/*" style="display: none;" onchange="AdminApp.handleImageUpload(event, 'brand-input-profile-img', 'brand-preview-profile-img')">
+                </label>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
+                <div style="width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 2px solid var(--accent-cyan); background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center;">
+                  <img id="brand-preview-profile-img" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="Profile Preview">
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" style="font-size: 11px;" onclick="AdminApp.clearImage('brand-input-profile-img', 'brand-preview-profile-img')">Reset Picture</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Hero Section Headlines -->
+        <div class="admin-table-wrapper" style="margin-bottom: var(--space-6);">
+          <div class="admin-table-header">
+            <span class="admin-table-title">3. Homepage Hero Headlines & Bio</span>
+          </div>
+          <div style="padding: var(--space-6);">
+            <div class="admin-form-group">
+              <label class="admin-form-label">Status Pill Text</label>
+              <input class="admin-form-input" id="brand-input-status" placeholder="e.g. AVAILABLE FOR PROJECTS">
+            </div>
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Hero Heading Line 1</label>
+                <input class="admin-form-input" id="brand-input-line1" placeholder="e.g. I Build">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Hero Highlight Text (Cyan Color)</label>
+                <input class="admin-form-input" id="brand-input-highlight" placeholder="e.g. Trading Algorithms">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Hero Heading Line 2</label>
+                <input class="admin-form-input" id="brand-input-line2" placeholder="e.g. That Actually Work">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label">Hero Description / Short Introduction</label>
+              <textarea class="admin-form-textarea" id="brand-input-description" rows="3" placeholder="Brief introduction text shown below the hero title..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Hero Stats Row -->
+        <div class="admin-table-wrapper" style="margin-bottom: var(--space-6);">
+          <div class="admin-table-header">
+            <span class="admin-table-title">4. Experience & Credibility Stats</span>
+          </div>
+          <div style="padding: var(--space-6);">
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Stat 1 Value</label>
+                <input class="admin-form-input" id="brand-input-stat1-val" placeholder="140+">
+                <label class="admin-form-label" style="margin-top: 6px;">Stat 1 Label</label>
+                <input class="admin-form-input" id="brand-input-stat1-lbl" placeholder="EAs & Bots Deployed">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Stat 2 Value</label>
+                <input class="admin-form-input" id="brand-input-stat2-val" placeholder="6+">
+                <label class="admin-form-label" style="margin-top: 6px;">Stat 2 Label</label>
+                <input class="admin-form-input" id="brand-input-stat2-lbl" placeholder="Years Experience">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Stat 3 Value</label>
+                <input class="admin-form-input" id="brand-input-stat3-val" placeholder="5.0">
+                <label class="admin-form-label" style="margin-top: 6px;">Stat 3 Label</label>
+                <input class="admin-form-input" id="brand-input-stat3-lbl" placeholder="Client Rating">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Contact & Social Channels -->
+        <div class="admin-table-wrapper" style="margin-bottom: var(--space-6);">
+          <div class="admin-table-header">
+            <span class="admin-table-title">5. Contact & Social Channels</span>
+          </div>
+          <div style="padding: var(--space-6);">
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Contact Email</label>
+                <input class="admin-form-input" id="brand-input-email" placeholder="contact@hassanplatform.com">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Telegram URL / Handle</label>
+                <input class="admin-form-input" id="brand-input-telegram" placeholder="https://t.me/yourhandle">
+              </div>
+            </div>
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label class="admin-form-label">WhatsApp / Phone Number</label>
+                <input class="admin-form-input" id="brand-input-whatsapp" placeholder="+92 300 1234567">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">GitHub URL</label>
+                <input class="admin-form-input" id="brand-input-github" placeholder="https://github.com/...">
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-form-label">Footer Short Bio</label>
+              <textarea class="admin-form-textarea" id="brand-input-bio" rows="2" placeholder="Footer bio description..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-8); text-align: right;">
+          <button class="btn btn-primary btn-lg" onclick="AdminApp.saveBranding()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span>Save All Branding Changes</span>
+          </button>
         </div>
       </div>
 

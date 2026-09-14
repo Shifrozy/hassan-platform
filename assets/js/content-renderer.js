@@ -120,10 +120,16 @@ const ContentRenderer = (() => {
       `).join('');
 
       const priceStr = product.priceFormatted || (product.price ? '$' + product.price : '$299');
+      const imageHtml = product.image ? `
+        <div style="height: 120px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 12px; border: 1px solid var(--border-subtle); background: var(--bg-secondary); display: flex; align-items: center; justify-content: center;">
+          <img src="${product.image}" alt="${escapeHtml(name)}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+      ` : '';
 
       return `
         <div class="product-card">
           <div class="product-content">
+            ${imageHtml}
             <div class="product-meta">
               <span class="badge ${product.platformBadge || 'badge-mt5'}">${escapeHtml(product.platform || 'Algorithmic')}</span>
               <span class="product-version">⭐ ${product.rating || '5.0'}</span>

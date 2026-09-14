@@ -112,9 +112,14 @@ function openProductDetailModal(product) {
   if (Array.isArray(product.supportedPairs)) pairsStr = product.supportedPairs.join(', ');
   else if (typeof product.supportedPairs === 'string') pairsStr = product.supportedPairs;
 
-  const timeframeStr = product.recommendedTimeframe || 'M5 / M15 / H1';
+  const imageBanner = product.image ? `
+    <div style="width: 100%; max-height: 180px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 1.25rem; border: 1px solid var(--border-subtle); background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center;">
+      <img src="${product.image}" alt="${name}" style="width: 100%; max-height: 180px; object-fit: cover;">
+    </div>
+  ` : '';
 
   body.innerHTML = `
+    ${imageBanner}
     <div style="margin-bottom: 1.5rem;">
       <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
         <span class="badge ${platformBadge}">${platform}</span>
