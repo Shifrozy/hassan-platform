@@ -1,78 +1,60 @@
 /**
  * ============================================================================
- * Platform Authentication Controller
+ * Algenza Platform - Server-Side Authentication Controller
  * ============================================================================
- * Cryptographic verification module using Web Crypto API (SHA-256)
+ * Handles administrator authentication via JWT with the Render/Node backend.
+ * Plaintext passwords and client-side hashes are completely eliminated.
  * ============================================================================
  */
 
 const AdminAuth = (() => {
-  // Salted cryptographic digest
-  const _DIGEST = '9f6ed163d2f8e7ca7032e665831b6531158df66a9a9b1a73f0f0f0026e45da2f';
-  const _SALT = '_hassan_platform_salt_2026';
-  const SESSION_KEY = 'hassan_admin_session';
-  const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
   /**
-   * One-way cryptographic hash with salt
+   * Log into the backend via POST /api/auth/login
    */
-  async function hashPassword(str) {
-    if (!str) return '';
-    const encoder = new TextEncoder();
-    const data = encoder.encode(str + _SALT);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
+  async function login(email, password) {
+    if (!password) {
+      return { success: false, message: 'Please enter your password' };
+    }
 
-  /**
-   * Verify credentials against secure digest
-   */
-  async function verifyPassword(candidate) {
-    if (!candidate) return false;
     try {
-      const candidateHash = await hashPassword(candidate);
-      const customHash = localStorage.getItem('hassan_admin_hash');
-      if (customHash && candidateHash === customHash) return true;
-      return candidateHash === _DIGEST;
-    } catch (e) {
-      console.error('Auth verification error:', e);
-      return false;
+      if (typeof AlgenzaAPI === 'undefined') {
+        throw new Error('AlgenzaAPI client not loaded');
+      }
+
+      const response = await AlgenzaAPI.login(email, password);
+      return {
+        success: true,
+        token: response.token,
+        admin: response.admin
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message || 'Authentication failed. Please verify credentials.'
+      };
     }
   }
 
   /**
-   * Create authenticated session
+   * Check if client has an active token
    */
-  function createSession() {
-    const array = new Uint8Array(32);
-    crypto.getRandomValues(array);
-    const token = Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
-
-    const session = {
-      token: token,
-      created: Date.now(),
-      expires: Date.now() + SESSION_DURATION
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    return session;
+  function isAuthenticated() {
+    if (typeof AlgenzaAPI !== 'undefined') {
+      return AlgenzaAPI.isAuthenticated();
+    }
+    return Boolean(localStorage.getItem('algenza_admin_token'));
   }
 
   /**
-   * Check if current session is active and valid
+   * Verify session validity with backend /api/auth/me
    */
-  function isAuthenticated() {
+  async function verifySession() {
+    if (!isAuthenticated()) return false;
     try {
-      const sessionData = localStorage.getItem(SESSION_KEY);
-      if (!sessionData) return false;
-      
-      const session = JSON.parse(sessionData);
-      if (!session || !session.expires || Date.now() > session.expires) {
-        logout();
-        return false;
-      }
-      return true;
-    } catch {
+      const res = await AlgenzaAPI.getMe();
+      return res.success;
+    } catch (e) {
       logout();
       return false;
     }
@@ -81,31 +63,37 @@ const AdminAuth = (() => {
   /**
    * Terminate active session
    */
-  function logout() {
-    localStorage.removeItem(SESSION_KEY);
+  async function logout() {
+    if (typeof AlgenzaAPI !== 'undefined') {
+      await AlgenzaAPI.logout();
+    } else {
+      localStorage.removeItem('algenza_admin_token');
+    }
   }
 
   /**
-   * Update credentials with new secure hash
+   * Update admin password via POST /api/auth/change-password
    */
-  async function changePassword(currentSecret, newSecret) {
-    const isValid = await verifyPassword(currentSecret);
-    if (!isValid) {
-      return { success: false, message: 'Current password verification failed' };
+  async function changePassword(currentPassword, newPassword) {
+    if (!currentPassword || !newPassword) {
+      return { success: false, message: 'Current and new password are required' };
     }
-    if (!newSecret || newSecret.length < 6) {
+    if (newPassword.length < 6) {
       return { success: false, message: 'New password must be at least 6 characters' };
     }
-    
-    const newHash = await hashPassword(newSecret);
-    localStorage.setItem('hassan_admin_hash', newHash);
-    return { success: true, message: 'Password updated successfully' };
+
+    try {
+      const res = await AlgenzaAPI.changePassword(currentPassword, newPassword);
+      return { success: true, message: res.message || 'Password changed successfully' };
+    } catch (error) {
+      return { success: false, message: error.message || 'Failed to update password' };
+    }
   }
 
   return {
-    verifyPassword,
-    createSession,
+    login,
     isAuthenticated,
+    verifySession,
     logout,
     changePassword
   };

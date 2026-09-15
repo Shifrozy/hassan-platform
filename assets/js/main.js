@@ -97,6 +97,16 @@ function getActiveSiteConfig() {
     footerBio: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.shortBio) || 'Developing institutional-grade MetaTrader 4/5 EAs, Python algorithmic trading bots, and Interactive Brokers API automations for global traders & funds.'
   };
 
+  const apiCached = localStorage.getItem('algenza_cache_config');
+  if (apiCached) {
+    try {
+      const parsed = JSON.parse(apiCached);
+      if (parsed && typeof parsed === 'object') {
+        return { ...defaults, ...parsed };
+      }
+    } catch (e) {}
+  }
+
   const stored = localStorage.getItem('hassan_admin_config');
   if (stored) {
     try {

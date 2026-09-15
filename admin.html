@@ -38,7 +38,8 @@
       <p class="admin-login-subtitle">Enter your password to manage site content</p>
 
       <form id="admin-login-form" class="admin-login-form">
-        <input type="password" id="admin-password" class="admin-login-input" placeholder="Enter admin password" autocomplete="current-password" autofocus>
+        <input type="email" id="admin-email" class="admin-login-input" placeholder="Admin Email" value="admin@algenza.com" autocomplete="username" style="margin-bottom: 12px;" required>
+        <input type="password" id="admin-password" class="admin-login-input" placeholder="Enter admin password" autocomplete="current-password" autofocus required>
         <div id="admin-login-error" class="admin-login-error"></div>
         <button type="submit" class="btn btn-primary btn-block">
           <span>Login</span>
@@ -71,6 +72,7 @@
         </a>
       </div>
       <div class="admin-topbar-right">
+        <span id="admin-api-status" style="font-family: var(--font-mono); font-size: 11px; padding: 4px 8px; border-radius: 4px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--accent-amber);">🟡 Connecting API...</span>
         <a href="index.html" class="btn btn-outline btn-sm" style="font-size: 12px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           <span>View Site</span>
@@ -497,27 +499,24 @@
           </div>
         </div>
 
-        <!-- Data Management -->
+        <!-- Backend API Configuration -->
         <div class="admin-table-wrapper" style="margin-bottom: var(--space-6);">
           <div class="admin-table-header">
-            <span class="admin-table-title">Data Management</span>
+            <span class="admin-table-title">Backend API Connection</span>
           </div>
           <div style="padding: var(--space-6);">
             <p style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-4);">
-              Export your admin data as a JSON backup, or import from a previous export.
+              Connect your Admin Panel to your Render Node.js backend or custom domain (e.g. <code>https://api.algenza.com</code>).
             </p>
-            <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
-              <button class="btn btn-secondary btn-sm" onclick="AdminApp.exportAllData()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                <span>Export Data</span>
-              </button>
-              <label class="btn btn-outline btn-sm" style="cursor: pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <span>Import Data</span>
-                <input type="file" accept=".json" style="display: none;" onchange="AdminApp.importData(this.files[0]).then(() => { location.reload(); });">
-              </label>
+            <div class="admin-form" style="max-width: 500px;">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Backend API URL</label>
+                <input type="url" id="settings-api-url" class="admin-form-input" placeholder="https://algenza-backend.onrender.com">
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="AdminApp.handleSaveApiUrl()">Save API URL</button>
             </div>
           </div>
+        </div>
         </div>
 
         <!-- Reset Data -->
@@ -560,6 +559,7 @@
 
   <!-- Scripts -->
   <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
   <script src="assets/js/data/services.js"></script>
   <script src="assets/js/data/products.js"></script>
   <script src="assets/js/data/portfolio.js"></script>

@@ -8,6 +8,10 @@
  */
 
 var SITE_CONFIG = {
+  api: {
+    baseUrl: "https://algenza-backend.onrender.com"
+  },
+
   brand: {
     name: "ALGENZA",
     suffix: "",

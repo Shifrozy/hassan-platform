@@ -18,10 +18,37 @@ const ContentRenderer = (() => {
     config: 'hassan_admin_config'
   };
 
+  const _apiCache = {
+    products: null,
+    services: null,
+    portfolio: null,
+    reviews: null,
+    config: null
+  };
+
   /**
-   * Helper to retrieve latest data from localStorage or fallback to defaults
+   * Helper to retrieve latest data:
+   * 1. In-memory API response
+   * 2. LocalStorage API cache
+   * 3. LocalStorage admin overrides (legacy fallback)
+   * 4. Global static data objects (PRODUCTS_DATA, etc.)
    */
   function getData(type) {
+    if (_apiCache[type] && Array.isArray(_apiCache[type]) && _apiCache[type].length > 0) {
+      return _apiCache[type];
+    }
+
+    try {
+      const apiCached = localStorage.getItem(`algenza_cache_${type}`);
+      if (apiCached) {
+        const parsed = JSON.parse(apiCached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          _apiCache[type] = parsed;
+          return parsed;
+        }
+      }
+    } catch (e) {}
+
     const stored = localStorage.getItem(STORAGE_KEYS[type]);
     if (stored) {
       try {
@@ -29,9 +56,7 @@ const ContentRenderer = (() => {
         if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
-      } catch (e) {
-        // Fall through
-      }
+      } catch (e) {}
     }
 
     // Fallback to global data objects
@@ -50,7 +75,10 @@ const ContentRenderer = (() => {
   }
 
   /**
-   * Initialize rendering on DOM ready
+   * Initialize rendering on DOM ready:
+   * 1. Renders instantly from local/cached data
+   * 2. Concurrently fetches from backend PostgreSQL API
+   * 3. Seamlessly updates DOM with fresh database content
    */
   function init() {
     renderHomeSections();
@@ -58,6 +86,63 @@ const ContentRenderer = (() => {
     renderServicesPage();
     renderPortfolioPage();
     renderReviewsPage();
+
+    hydrateFromAPI();
+  }
+
+  /**
+   * Asynchronously hydrate content from PostgreSQL backend
+   */
+  async function hydrateFromAPI() {
+    if (typeof AlgenzaAPI === 'undefined') return;
+
+    try {
+      const [prodRes, servRes, portRes, revRes, confRes] = await Promise.allSettled([
+        AlgenzaAPI.getProducts(),
+        AlgenzaAPI.getServices(),
+        AlgenzaAPI.getPortfolio(),
+        AlgenzaAPI.getReviews(),
+        AlgenzaAPI.getConfig()
+      ]);
+
+      if (prodRes.status === 'fulfilled' && prodRes.value?.data && Array.isArray(prodRes.value.data) && prodRes.value.data.length > 0) {
+        _apiCache.products = prodRes.value.data;
+        try { localStorage.setItem('algenza_cache_products', JSON.stringify(prodRes.value.data)); } catch (e) {}
+        renderHomeProducts();
+        renderProductsPage();
+      }
+
+      if (servRes.status === 'fulfilled' && servRes.value?.data && Array.isArray(servRes.value.data) && servRes.value.data.length > 0) {
+        _apiCache.services = servRes.value.data;
+        try { localStorage.setItem('algenza_cache_services', JSON.stringify(servRes.value.data)); } catch (e) {}
+        renderHomeServices();
+        renderServicesPage();
+      }
+
+      if (portRes.status === 'fulfilled' && portRes.value?.data && Array.isArray(portRes.value.data) && portRes.value.data.length > 0) {
+        _apiCache.portfolio = portRes.value.data;
+        try { localStorage.setItem('algenza_cache_portfolio', JSON.stringify(portRes.value.data)); } catch (e) {}
+        renderPortfolioPage();
+      }
+
+      if (revRes.status === 'fulfilled' && revRes.value?.data && Array.isArray(revRes.value.data) && revRes.value.data.length > 0) {
+        _apiCache.reviews = revRes.value.data;
+        try { localStorage.setItem('algenza_cache_reviews', JSON.stringify(revRes.value.data)); } catch (e) {}
+        renderHomeReviews();
+        renderReviewsPage();
+      }
+
+      if (confRes.status === 'fulfilled' && confRes.value?.data && typeof confRes.value.data === 'object') {
+        const configData = confRes.value.data;
+        _apiCache.config = configData;
+        try { localStorage.setItem('algenza_cache_config', JSON.stringify(configData)); } catch (e) {}
+        if (typeof initDynamicBranding === 'function') {
+          initDynamicBranding();
+        }
+      }
+    } catch (err) {
+      console.warn('API hydration background sync:', err.message);
+    }
   }
 
   // =========================================================================

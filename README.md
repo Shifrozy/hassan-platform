@@ -1,12 +1,25 @@
-# ⚡ Hassan Platform — Professional Personal Brand & Business Platform (V1)
+# ⚡ Algenza — Algorithmic Trading Systems & Quantitative Software Platform
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-hassan--platform-00e5ff?logo=github)](https://github.com/Shifrozy/hassan-platform)
-[![Version](https://img.shields.io/badge/version-1.0.0-00e676.svg)](https://github.com/Shifrozy/hassan-platform)
+[![Frontend](https://img.shields.io/badge/Cloudflare_Pages-algenza.com-f38020?logo=cloudflare)](https://algenza.com)
+[![Backend](https://img.shields.io/badge/Node.js-Express_+_PostgreSQL-339933?logo=node.js)](backend/)
 [![License](https://img.shields.io/badge/license-Proprietary-7952ff.svg)](LICENSE)
 
-A high-performance, institutional-grade personal brand and digital software business website representing **M. Hassan** — specialist in **MetaTrader 4/5 Expert Advisors (EAs)**, **Python algorithmic trading bots**, **Interactive Brokers (IBKR) automation**, and low-latency quantitative execution software.
+A high-performance, institutional-grade digital platform for **Algenza**, founded by **M. Hassan** — specializing in **MetaTrader 4/5 Expert Advisors (EAs)**, **Python algorithmic trading bots**, **Interactive Brokers (IBKR) automation**, and low-latency quantitative execution software.
 
-Built with a modern, responsive design system and **decoupled data architecture** to facilitate seamless scaling into customer dashboards, Stripe payments, and automated MQL5 license verification APIs.
+### 🏗️ Production Architecture
+- **Frontend**: Cloudflare Pages ([algenza.com](https://algenza.com))
+- **Backend API**: Node.js + Express (Deployable on [Render.com](https://render.com) or `api.algenza.com`)
+- **Database**: PostgreSQL (Render PostgreSQL, Neon, or self-hosted)
+- **Admin Authentication**: Server-side JWT + bcrypt password hashing (no plaintext or client-side digests)
+- **Global Content Sync**: Changes made in the Admin Panel immediately persist in PostgreSQL and sync to all visitors and mobile devices worldwide.
+
+---
+
+## 📚 Documentation
+- [Render Deployment & PostgreSQL Guide](docs/RENDER_DEPLOYMENT_GUIDE.md)
+- [Local Development & Testing Guide](docs/LOCAL_DEVELOPMENT_GUIDE.md)
+- [Multi-Phase Scaling Blueprint](docs/ARCHITECTURE_AND_SCALING.md)
 
 ---
 
