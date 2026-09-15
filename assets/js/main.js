@@ -72,11 +72,11 @@ function initMobileDrawer() {
  */
 function getActiveSiteConfig() {
   const defaults = {
-    brandName: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.name) || 'HASSAN',
-    brandSuffix: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.suffix) || '.ALGO',
+    brandName: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.name) || 'ALGENZA',
+    brandSuffix: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.suffix !== undefined) ? SITE_CONFIG.brand.suffix : '',
     brandTag: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.brand?.tag) || 'PRO',
     devName: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.author?.name) || 'M. Hassan',
-    devTitle: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.author?.title) || 'Trading Systems Engineer',
+    devTitle: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.author?.title) || 'CEO & Co-Founder of Algenza',
     heroStatus: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.status) || 'AVAILABLE FOR PROJECTS',
     heroLine1: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.line1) || 'I Build',
     heroHighlight: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.highlight) || 'Trading Algorithms',
@@ -89,7 +89,7 @@ function getActiveSiteConfig() {
     stat2Label: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat2Label) || 'Years Experience',
     stat3Val: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat3Val) || '5.0',
     stat3Label: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.hero?.stat3Label) || 'Client Rating',
-    contactEmail: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.email) || 'contact@hassanplatform.com',
+    contactEmail: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.email) || 'contact@algenza.com',
     telegramUrl: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.telegramUrl) || 'https://t.me/HassanAlgo',
     telegramHandle: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.telegram) || '@HassanAlgo',
     whatsapp: (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.contact?.whatsapp) || '',
@@ -119,11 +119,19 @@ function initDynamicBranding() {
 
   // 2. Brand Logo Text (Navbar, Drawer, Footer, Admin)
   document.querySelectorAll('.brand-logo-text').forEach(el => {
-    // If inside admin brand tag, preserve or format cleanly
-    const name = config.brandName || 'HASSAN';
-    const suffix = config.brandSuffix || '.ALGO';
-    el.innerHTML = `${escapeHtml(name)}<span>${escapeHtml(suffix)}</span>`;
+    const name = config.brandName || 'ALGENZA';
+    const suffix = config.brandSuffix !== undefined ? config.brandSuffix : '';
+    if (suffix) {
+      el.innerHTML = `${escapeHtml(name)}<span>${escapeHtml(suffix)}</span>`;
+    } else {
+      el.innerHTML = `${escapeHtml(name)}`;
+    }
   });
+
+  // 2b. Page Title Auto-Update
+  if (document.title.includes('M. Hassan |')) {
+    document.title = document.title.replace('M. Hassan |', 'Algenza |');
+  }
 
   // 3. Brand Badges / Tags
   document.querySelectorAll('.brand-tag:not(.brand-tag-admin)').forEach(el => {

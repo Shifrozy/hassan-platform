@@ -746,11 +746,11 @@ const AdminApp = (() => {
 
     const val = (k, def) => (config[k] !== undefined && config[k] !== null) ? config[k] : (def || '');
 
-    setVal('brand-input-name', val('brandName', 'HASSAN'));
-    setVal('brand-input-suffix', val('brandSuffix', '.ALGO'));
+    setVal('brand-input-name', val('brandName', 'ALGENZA'));
+    setVal('brand-input-suffix', val('brandSuffix', ''));
     setVal('brand-input-tag', val('brandTag', 'PRO'));
     setVal('brand-input-devname', val('devName', 'M. Hassan'));
-    setVal('brand-input-devtitle', val('devTitle', 'Trading Systems Engineer'));
+    setVal('brand-input-devtitle', val('devTitle', 'CEO & Co-Founder of Algenza'));
     setVal('brand-input-profile-img', val('profileImage', 'assets/images/brand/hassan-profile.jpg'));
     setVal('brand-input-status', val('heroStatus', 'AVAILABLE FOR PROJECTS'));
     setVal('brand-input-line1', val('heroLine1', 'I Build'));
@@ -763,7 +763,7 @@ const AdminApp = (() => {
     setVal('brand-input-stat2-lbl', val('stat2Label', 'Years Experience'));
     setVal('brand-input-stat3-val', val('stat3Val', '5.0'));
     setVal('brand-input-stat3-lbl', val('stat3Label', 'Client Rating'));
-    setVal('brand-input-email', val('contactEmail', 'contact@hassanplatform.com'));
+    setVal('brand-input-email', val('contactEmail', 'contact@algenza.com'));
     setVal('brand-input-telegram', val('telegramUrl', 'https://t.me/HassanAlgo'));
     setVal('brand-input-whatsapp', val('whatsapp', ''));
     setVal('brand-input-github', val('githubUrl', 'https://github.com/Shifrozy/hassan-platform'));
@@ -787,11 +787,11 @@ const AdminApp = (() => {
     };
 
     const config = {
-      brandName: getV('brand-input-name') || 'HASSAN',
-      brandSuffix: getV('brand-input-suffix') || '.ALGO',
+      brandName: getV('brand-input-name') || 'ALGENZA',
+      brandSuffix: getV('brand-input-suffix') || '',
       brandTag: getV('brand-input-tag') || 'PRO',
       devName: getV('brand-input-devname') || 'M. Hassan',
-      devTitle: getV('brand-input-devtitle') || 'Trading Systems Engineer',
+      devTitle: getV('brand-input-devtitle') || 'CEO & Co-Founder of Algenza',
       profileImage: getV('brand-input-profile-img') || 'assets/images/brand/hassan-profile.jpg',
       heroStatus: getV('brand-input-status') || 'AVAILABLE FOR PROJECTS',
       heroLine1: getV('brand-input-line1') || 'I Build',

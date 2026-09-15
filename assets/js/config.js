@@ -9,20 +9,20 @@
 
 var SITE_CONFIG = {
   brand: {
-    name: "HASSAN",
-    suffix: ".ALGO",
+    name: "ALGENZA",
+    suffix: "",
     tag: "PRO",
     tagline: "Quantitative Trading & Automation Specialist",
     shortBio: "Developing institutional-grade MetaTrader 4/5 EAs, Python algorithmic trading bots, and Interactive Brokers API automations for global traders & funds.",
-    logoText: "HASSAN",
-    logoHighlight: "PRO",
+    logoText: "ALGENZA",
+    logoHighlight: "",
     statusText: "AVAILABLE FOR PROJECTS",
     foundedYear: 2020
   },
 
   author: {
     name: "M. Hassan",
-    title: "Trading Systems Engineer",
+    title: "CEO & Co-Founder of Algenza",
     location: "Global / Remote Solutions",
     experienceYears: "6+",
     completedProjects: "140+",
@@ -31,6 +31,7 @@ var SITE_CONFIG = {
   },
 
   hero: {
+    badge: "CEO & Co-Founder of Algenza",
     status: "AVAILABLE FOR PROJECTS",
     line1: "I Build",
     highlight: "Trading Algorithms",
@@ -46,7 +47,7 @@ var SITE_CONFIG = {
   },
 
   contact: {
-    email: "contact@hassanplatform.com",
+    email: "contact@algenza.com",
     telegram: "@HassanAlgo",
     telegramUrl: "https://t.me/HassanAlgo",
     whatsapp: "+92 300 0000000",
@@ -57,7 +58,7 @@ var SITE_CONFIG = {
   },
 
   meta: {
-    siteUrl: "https://hassan-platform.pages.dev",
+    siteUrl: "https://algenza.com",
     ogImage: "assets/images/brand/hassan-profile.jpg",
     twitterHandle: "@your_handle"
   },
